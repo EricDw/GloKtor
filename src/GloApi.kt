@@ -9,13 +9,12 @@ import io.ktor.client.features.json.GsonSerializer
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
-import io.ktor.client.request.*
+import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.get
 import io.ktor.http.ContentType
-import io.ktor.http.URLBuilder
 import io.ktor.http.URLProtocol
 import io.ktor.http.headersOf
 import io.ktor.util.KtorExperimentalAPI
-import io.ktor.util.url
 import net.publicmethod.dtos.GloUserDTO
 
 class GloApi @KtorExperimentalAPI constructor(
@@ -42,6 +41,11 @@ class GloApi @KtorExperimentalAPI constructor(
             parameters.append(QUERY_ACCESS_TOKEN, personalAuthenticationToken)
             headersOf("Content-Type" to listOf(ContentType.Application.Json.toString()))
         }
+    }
+
+    fun getBoard(): GloBoardDTO
+    {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 }

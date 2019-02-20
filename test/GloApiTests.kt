@@ -152,6 +152,52 @@ class GloApiTests
         // Assert
         assertEquals(expected, actual)
     }
+
+
+    val boardJson =
+        """{"name":"Test Board1","id":"some-gi-ber-ish1"}"""
+
+    @KtorExperimentalAPI
+    @Test
+    fun `given PAT when getBoard then return GloBoardDTO`() = runBlocking {
+
+        // Arrange
+        val client = HttpClient(MockEngine {
+            when (url.encodedPath)
+            {
+                "/v1/glo/boards/" ->
+                {
+                    MockHttpResponse(
+                        call,
+                        HttpStatusCode.OK,
+                        ByteReadChannel(boardJson.toByteArray(Charsets.UTF_8)),
+                        headersOf("Content-Type", ContentType.Application.Json.toString())
+                    )
+                }
+                else ->
+                    responseError(HttpStatusCode.NotFound, "Not Found ${url.encodedPath}")
+            }
+        }) {
+
+            install(JsonFeature) {
+                serializer = GsonSerializer()
+            }
+            expectSuccess = false
+        }
+
+        val gloApi = GloApi(
+            personalAuthenticationToken = "test-pat",
+            logLevel = LogLevel.ALL,
+            httpClient = client
+        )
+        val expected = GloBoardDTO(id = "some-gi-ber-ish1", name = "Test Board1")
+
+        // Act
+        val actual = gloApi.getBoard()
+
+        // Assert
+        assertEquals(expected, actual)
+    }
 }
 
 
