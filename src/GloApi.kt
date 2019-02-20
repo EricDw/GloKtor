@@ -31,21 +31,20 @@ class GloApi @KtorExperimentalAPI constructor(
     suspend fun getBoards(): List<GloBoardDTO> =
         httpClient.get { buildURLFor(BOARDS_ENDPOINT) }
 
-    private fun HttpRequestBuilder.buildURLFor(endpoint: String)
-    {
+    suspend fun getBoard(boardId: String): GloBoardDTO =
+        httpClient.get {
+            buildURLFor(BOARD_ENDPOINT, boardId)
+        }
 
+    private fun HttpRequestBuilder.buildURLFor(endpoint: String, boardId: String? = "")
+    {
             url {
             protocol = URLProtocol.HTTPS
             host = HOST
-            encodedPath = "$ENCODED_PATH$endpoint"
+                encodedPath = "$ENCODED_PATH$endpoint$boardId"
             parameters.append(QUERY_ACCESS_TOKEN, personalAuthenticationToken)
             headersOf("Content-Type" to listOf(ContentType.Application.Json.toString()))
         }
-    }
-
-    fun getBoard(): GloBoardDTO
-    {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 }
@@ -64,4 +63,5 @@ private const val HOST = "gloapi.gitkraken.com"
 private const val ENCODED_PATH = "/v1/glo/"
 private const val USER_ENDPOINT = "user"
 private const val BOARDS_ENDPOINT = "boards"
+private const val BOARD_ENDPOINT = "boards/"
 private const val QUERY_ACCESS_TOKEN = "access_token"

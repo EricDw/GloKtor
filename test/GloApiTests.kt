@@ -162,10 +162,11 @@ class GloApiTests
     fun `given PAT when getBoard then return GloBoardDTO`() = runBlocking {
 
         // Arrange
+        val expected = GloBoardDTO(id = "some-gi-ber-ish1", name = "Test Board1")
         val client = HttpClient(MockEngine {
             when (url.encodedPath)
             {
-                "/v1/glo/boards/" ->
+                "/v1/glo/boards/${expected.id}" ->
                 {
                     MockHttpResponse(
                         call,
@@ -190,10 +191,9 @@ class GloApiTests
             logLevel = LogLevel.ALL,
             httpClient = client
         )
-        val expected = GloBoardDTO(id = "some-gi-ber-ish1", name = "Test Board1")
 
         // Act
-        val actual = gloApi.getBoard()
+        val actual = gloApi.getBoard(expected.id)
 
         // Assert
         assertEquals(expected, actual)
