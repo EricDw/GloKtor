@@ -1,5 +1,6 @@
 package net.publicmethod
 
+import dtos.GloBoardDTO
 import io.ktor.client.HttpClient
 import io.ktor.client.call.call
 import io.ktor.client.engine.mock.MockEngine
@@ -22,14 +23,14 @@ import kotlin.test.assertEquals
 class GloApiTests
 {
 
-    @Test
-    fun `given user endpoint when getUser then return GloUserDTO`()
-    {
-        // Arrange
-        val userJson = """{"id":"some-gi-ber-ish","username":"Test User"}"""
-        val expected = GloUserDTO(id = "some-gi-ber-ish", name = "Test User")
+    private val userJson = """{"id":"some-gi-ber-ish","username":"Test User"}"""
 
+    @Test
+    fun `given user endpoint when getUser then return GloUserDTO`() =
         runBlocking {
+            // Arrange
+            val expected = GloUserDTO(id = "some-gi-ber-ish", name = "Test User")
+
             val client = HttpClient(MockEngine {
                 when (url.encodedPath)
                 {
@@ -60,14 +61,13 @@ class GloApiTests
             assertEquals("application/json", client.call("/user").response.headers["Content-Type"])
             assertEquals("Not Found other/path", client.get("/other/path"))
         }
-    }
+
 
     @KtorExperimentalAPI
     @Test
-    fun `given PAT when getUser then return Deferred of GloUserDTO`() = runBlocking {
+    fun `given PAT when getUser then return GloUserDTO`() = runBlocking {
 
         // Arrange
-        val userJson = """{"id":"some-gi-ber-ish","username":"Test User"}"""
         val client = HttpClient(MockEngine {
             when (url.encodedPath)
             {
@@ -100,6 +100,54 @@ class GloApiTests
 
         // Act
         val actual = gloApi.getUser()
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
+    val boardsJson =
+        """[{"name":"Test Board1","id":"some-gi-ber-ish1"},{"name":"Test Board2","id":"some-gi-ber-ish2"}]"""
+
+    @KtorExperimentalAPI
+    @Test
+    fun `given PAT when getBoards then return GloBoardDTOs`() = runBlocking {
+
+        // Arrange
+        val client = HttpClient(MockEngine {
+            when (url.encodedPath)
+            {
+                "/v1/glo/boards" ->
+                {
+                    MockHttpResponse(
+                        call,
+                        HttpStatusCode.OK,
+                        ByteReadChannel(boardsJson.toByteArray(Charsets.UTF_8)),
+                        headersOf("Content-Type", ContentType.Application.Json.toString())
+                    )
+                }
+                else ->
+                    responseError(HttpStatusCode.NotFound, "Not Found ${url.encodedPath}")
+            }
+        }) {
+
+            install(JsonFeature) {
+                serializer = GsonSerializer()
+            }
+            expectSuccess = false
+        }
+
+        val gloApi = GloApi(
+            personalAuthenticationToken = "test-pat",
+            logLevel = LogLevel.ALL,
+            httpClient = client
+        )
+        val expected = listOf(
+            GloBoardDTO(id = "some-gi-ber-ish1", name = "Test Board1"),
+            GloBoardDTO(id = "some-gi-ber-ish2", name = "Test Board2")
+        )
+
+        // Act
+        val actual = gloApi.getBoards()
 
         // Assert
         assertEquals(expected, actual)

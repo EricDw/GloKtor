@@ -1,5 +1,6 @@
 package net.publicmethod
 
+import dtos.GloBoardDTO
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.features.json.GsonSerializer
@@ -33,8 +34,17 @@ class GloApi @KtorExperimentalAPI constructor(
     private fun buildGetUserURL(): String =
         "$BASE_URL$USER_ENDPOINT$QUERY_ACCESS_TOKEN$personalAuthenticationToken"
 
+    suspend fun getBoards(): List<GloBoardDTO> =
+        httpClient.get {
+            url(buildGetBoardsURL())
+        }
+
+    private fun buildGetBoardsURL(): String =
+        "$BASE_URL$BOARDS_ENDPOINT$QUERY_ACCESS_TOKEN$personalAuthenticationToken"
+
 }
 
 private const val BASE_URL = "https://gloapi.gitkraken.com/v1/glo/"
 private const val USER_ENDPOINT = "user"
+private const val BOARDS_ENDPOINT = "boards"
 private const val QUERY_ACCESS_TOKEN = "?access_token="
