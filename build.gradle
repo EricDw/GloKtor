@@ -29,13 +29,19 @@ repositories {
     maven { url 'https://kotlin.bintray.com/kotlinx' }
 }
 
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}
+
 dependencies {
-    // Kotlin 
+    // Kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    
+
     // Logging
     compile "ch.qos.logback:logback-classic:$logback_version"
-    
+
     // Ktor
     compile "io.ktor:ktor-server-cio:$ktor_version"
     compile "io.ktor:ktor-client-core:$ktor_version"
@@ -44,7 +50,7 @@ dependencies {
     compile "io.ktor:ktor-client-json-jvm:$ktor_version"
     compile "io.ktor:ktor-client-gson:$ktor_version"
     compile "io.ktor:ktor-client-logging-jvm:$ktor_version"
-    
+
     // Testing
     testCompile "io.ktor:ktor-server-tests:$ktor_version"
     testCompile "io.ktor:ktor-client-mock:$ktor_version"
