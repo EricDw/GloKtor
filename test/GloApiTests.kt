@@ -27,7 +27,7 @@ class GloApiTests
     {
         // Arrange
         val userJson = """{"id":"some-gi-ber-ish","username":"Test User"}"""
-        val expected = GloUserDTO(id = "some-gi-ber-ish", userName = "Test User")
+        val expected = GloUserDTO(id = "some-gi-ber-ish", name = "Test User")
 
         runBlocking {
             val client = HttpClient(MockEngine {
@@ -96,7 +96,7 @@ class GloApiTests
             logLevel = LogLevel.ALL,
             httpClient = client
         )
-        val expected = GloUserDTO(id = "some-gi-ber-ish", userName = "Test User")
+        val expected = GloUserDTO(id = "some-gi-ber-ish", name = "Test User")
 
         // Act
         val actual = gloApi.getUser()
