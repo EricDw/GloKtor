@@ -2,49 +2,62 @@ package net.publicmethod
 
 import dtos.GloBoardDTO
 import io.ktor.client.HttpClient
+import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.cio.CIO
+import io.ktor.client.engine.cio.CIOEngineConfig
 import io.ktor.client.features.json.GsonSerializer
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
-import io.ktor.client.request.get
-import io.ktor.client.request.url
+import io.ktor.client.request.*
+import io.ktor.http.ContentType
+import io.ktor.http.URLBuilder
+import io.ktor.http.URLProtocol
+import io.ktor.http.headersOf
 import io.ktor.util.KtorExperimentalAPI
+import io.ktor.util.url
 import net.publicmethod.dtos.GloUserDTO
 
 class GloApi @KtorExperimentalAPI constructor(
     private val personalAuthenticationToken: String,
     private val logLevel: LogLevel = LogLevel.NONE,
     private val httpClient: HttpClient = HttpClient(CIO) {
-        install(JsonFeature) {
-            serializer = GsonSerializer()
-        }
-        install(Logging) {
-            level = logLevel
-        }
+        configureCioClient(logLevel)
     }
 )
 {
     suspend fun getUser(): GloUserDTO =
-        httpClient.get {
-            url(buildGetUserURL())
-        }
-
-
-    private fun buildGetUserURL(): String =
-        "$BASE_URL$USER_ENDPOINT$QUERY_ACCESS_TOKEN$personalAuthenticationToken"
+        httpClient.get { buildURLFor(USER_ENDPOINT) }
 
     suspend fun getBoards(): List<GloBoardDTO> =
-        httpClient.get {
-            url(buildGetBoardsURL())
-        }
+        httpClient.get { buildURLFor(BOARDS_ENDPOINT) }
 
-    private fun buildGetBoardsURL(): String =
-        "$BASE_URL$BOARDS_ENDPOINT$QUERY_ACCESS_TOKEN$personalAuthenticationToken"
+    private fun HttpRequestBuilder.buildURLFor(endpoint: String)
+    {
+
+            url {
+            protocol = URLProtocol.HTTPS
+            host = HOST
+            encodedPath = "$ENCODED_PATH$endpoint"
+            parameters.append(QUERY_ACCESS_TOKEN, personalAuthenticationToken)
+            headersOf("Content-Type" to listOf(ContentType.Application.Json.toString()))
+        }
+    }
 
 }
 
-private const val BASE_URL = "https://gloapi.gitkraken.com/v1/glo/"
+private fun HttpClientConfig<CIOEngineConfig>.configureCioClient(logLevel: LogLevel)
+{
+    install(JsonFeature) {
+        serializer = GsonSerializer()
+    }
+    install(Logging) {
+        level = logLevel
+    }
+}
+
+private const val HOST = "gloapi.gitkraken.com"
+private const val ENCODED_PATH = "/v1/glo/"
 private const val USER_ENDPOINT = "user"
 private const val BOARDS_ENDPOINT = "boards"
-private const val QUERY_ACCESS_TOKEN = "?access_token="
+private const val QUERY_ACCESS_TOKEN = "access_token"
