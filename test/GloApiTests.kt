@@ -4,6 +4,7 @@ import dtos.GloBoardDTO
 import io.ktor.client.HttpClient
 import io.ktor.client.call.call
 import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.MockHttpRequest
 import io.ktor.client.engine.mock.MockHttpResponse
 import io.ktor.client.engine.mock.responseError
 import io.ktor.client.features.json.GsonSerializer
@@ -26,69 +27,46 @@ class GloApiTests
     private val userJson = """{"id":"some-gi-ber-ish","username":"Test User"}"""
 
     @Test
-    fun `given user endpoint when getUser then return GloUserDTO`() =
-        runBlocking {
-            // Arrange
-            val expected = GloUserDTO(id = "some-gi-ber-ish", name = "Test User")
+    fun `given user endpoint when getUser then return GloUserDTO`() = runBlocking {
+        // Arrange
+        val expected = GloUserDTO(id = "some-gi-ber-ish", name = "Test User")
 
-            val client = HttpClient(MockEngine {
-                when (url.encodedPath)
+        val client = generateHttpClientWithMockEngine {
+            when (url.encodedPath)
+            {
+                "user" ->
                 {
-                    "user" ->
-                    {
-                        MockHttpResponse(
-                            call,
-                            HttpStatusCode.OK,
-                            ByteReadChannel(userJson.toByteArray(Charsets.UTF_8)),
-                            headersOf("Content-Type", ContentType.Application.Json.toString())
-                        )
-                    }
-                    else ->
-                        responseError(HttpStatusCode.NotFound, "Not Found ${url.encodedPath}")
+                    generateMockHttpResponseFor(userJson)
                 }
-            }) {
-                install(JsonFeature) {
-                    serializer = GsonSerializer()
-                }
-                expectSuccess = false
+                else ->
+                    generate404MockHttpResponse()
             }
-            // Act
-            val actual = client.get<GloUserDTO>("/user")
-
-
-            // Assert
-            assertEquals(expected, actual)
-            assertEquals("application/json", client.call("/user").response.headers["Content-Type"])
-            assertEquals("Not Found other/path", client.get("/other/path"))
         }
+        // Act
+        val actual = client.get<GloUserDTO>("/user")
 
+
+        // Assert
+        assertEquals(expected, actual)
+        assertEquals("application/json", client.call("/user").response.headers["Content-Type"])
+        assertEquals("Not Found other/path", client.get("/other/path"))
+    }
 
     @KtorExperimentalAPI
     @Test
     fun `given PAT when getUser then return GloUserDTO`() = runBlocking {
 
         // Arrange
-        val client = HttpClient(MockEngine {
+        val client = generateHttpClientWithMockEngine {
             when (url.encodedPath)
             {
                 "/v1/glo/user" ->
                 {
-                    MockHttpResponse(
-                        call,
-                        HttpStatusCode.OK,
-                        ByteReadChannel(userJson.toByteArray(Charsets.UTF_8)),
-                        headersOf("Content-Type", ContentType.Application.Json.toString())
-                    )
+                    generateMockHttpResponseFor(userJson)
                 }
                 else ->
-                    responseError(HttpStatusCode.NotFound, "Not Found ${url.encodedPath}")
+                    generate404MockHttpResponse()
             }
-        }) {
-
-            install(JsonFeature) {
-                serializer = GsonSerializer()
-            }
-            expectSuccess = false
         }
 
         val gloApi = GloApi(
@@ -105,35 +83,25 @@ class GloApiTests
         assertEquals(expected, actual)
     }
 
-    val boardsJson =
+    private val boardsJson =
         """[{"name":"Test Board1","id":"some-gi-ber-ish1"},{"name":"Test Board2","id":"some-gi-ber-ish2"}]"""
+
 
     @KtorExperimentalAPI
     @Test
     fun `given PAT when getBoards then return GloBoardDTOs`() = runBlocking {
 
         // Arrange
-        val client = HttpClient(MockEngine {
+        val client = generateHttpClientWithMockEngine {
             when (url.encodedPath)
             {
                 "/v1/glo/boards" ->
                 {
-                    MockHttpResponse(
-                        call,
-                        HttpStatusCode.OK,
-                        ByteReadChannel(boardsJson.toByteArray(Charsets.UTF_8)),
-                        headersOf("Content-Type", ContentType.Application.Json.toString())
-                    )
+                    generateMockHttpResponseFor(boardsJson)
                 }
                 else ->
-                    responseError(HttpStatusCode.NotFound, "Not Found ${url.encodedPath}")
+                    generate404MockHttpResponse()
             }
-        }) {
-
-            install(JsonFeature) {
-                serializer = GsonSerializer()
-            }
-            expectSuccess = false
         }
 
         val gloApi = GloApi(
@@ -153,8 +121,7 @@ class GloApiTests
         assertEquals(expected, actual)
     }
 
-
-    val boardJson =
+    private val boardJson =
         """{"name":"Test Board1","id":"some-gi-ber-ish1"}"""
 
     @KtorExperimentalAPI
@@ -163,27 +130,16 @@ class GloApiTests
 
         // Arrange
         val expected = GloBoardDTO(id = "some-gi-ber-ish1", name = "Test Board1")
-        val client = HttpClient(MockEngine {
+        val client = generateHttpClientWithMockEngine {
             when (url.encodedPath)
             {
                 "/v1/glo/boards/${expected.id}" ->
                 {
-                    MockHttpResponse(
-                        call,
-                        HttpStatusCode.OK,
-                        ByteReadChannel(boardJson.toByteArray(Charsets.UTF_8)),
-                        headersOf("Content-Type", ContentType.Application.Json.toString())
-                    )
+                    generateMockHttpResponseFor(boardJson)
                 }
                 else ->
-                    responseError(HttpStatusCode.NotFound, "Not Found ${url.encodedPath}")
+                    generate404MockHttpResponse()
             }
-        }) {
-
-            install(JsonFeature) {
-                serializer = GsonSerializer()
-            }
-            expectSuccess = false
         }
 
         val gloApi = GloApi(
@@ -198,6 +154,32 @@ class GloApiTests
         // Assert
         assertEquals(expected, actual)
     }
+
 }
+
+private fun generateHttpClientWithMockEngine(block: MockHttpRequest.() -> MockHttpResponse): HttpClient
+{
+    return HttpClient(MockEngine {
+        block()
+    }) {
+        install(JsonFeature) {
+            serializer = GsonSerializer()
+        }
+        expectSuccess = false
+    }
+}
+
+private fun MockHttpRequest.generateMockHttpResponseFor(json: String): MockHttpResponse
+{
+    return MockHttpResponse(
+        call,
+        HttpStatusCode.OK,
+        ByteReadChannel(json.toByteArray(Charsets.UTF_8)),
+        headersOf("Content-Type", ContentType.Application.Json.toString())
+    )
+}
+
+private fun MockHttpRequest.generate404MockHttpResponse() =
+    responseError(HttpStatusCode.NotFound, "Not Found ${url.encodedPath}")
 
 
