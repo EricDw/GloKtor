@@ -8,7 +8,7 @@ data class BoardDTO(
     val id: String,
     val name: String,
     @SerializedName("archived_columns")
-    val archivedColumns: ArchivedColumns = emptyList(),
+    val archivedColumns: ArchivedColumns? = emptyList(),
     @SerializedName("archived_date")
     val archivedDate: String = "",
     val columns: Columns = emptyList(),

@@ -1,5 +1,6 @@
 package net.publicmethod
 
+import dtos.BoardDTO
 import dtos.GloBoardDTO
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
@@ -28,7 +29,7 @@ class GloApi @KtorExperimentalAPI constructor(
     suspend fun getUser(): GloUserDTO =
         httpClient.get { buildURLFor(USER_ENDPOINT) }
 
-    suspend fun getBoards(): List<GloBoardDTO> =
+    suspend fun getBoards(): List<BoardDTO> =
         httpClient.get { buildURLFor(BOARDS_ENDPOINT) }
 
     suspend fun getBoard(boardId: String): GloBoardDTO =

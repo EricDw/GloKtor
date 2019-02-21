@@ -1,5 +1,6 @@
 package net.publicmethod
 
+import dtos.BoardDTO
 import dtos.GloBoardDTO
 import io.ktor.client.HttpClient
 import io.ktor.client.call.call
@@ -110,8 +111,8 @@ class GloApiTests
             httpClient = client
         )
         val expected = listOf(
-            GloBoardDTO(id = "some-gi-ber-ish1", name = "Test Board1"),
-            GloBoardDTO(id = "some-gi-ber-ish2", name = "Test Board2")
+            BoardDTO(id = "some-gi-ber-ish1", name = "Test Board1"),
+            BoardDTO(id = "some-gi-ber-ish2", name = "Test Board2")
         )
 
         // Act
