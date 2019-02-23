@@ -19,7 +19,7 @@ fun main(args: Array<String>): Unit = io.ktor.server.cio.EngineMain.main(args)
 //        val message = client.post<GloUserDTO> {
 //            url(URL("http://127.0.0.1:8080/path/to/endpoint"))
 //            contentType(ContentType.Application.Json)
-//            body = GloUserDTO(id = "hello", name = "world")
+//            body = GloUserDTO(id = "hello", username = "world")
 //        }
 //    }
 //

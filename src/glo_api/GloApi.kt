@@ -1,7 +1,6 @@
-package net.publicmethod
+package net.publicmethod.glo_api
 
-import dtos.BoardDTO
-import dtos.GloBoardDTO
+import glo_api.transform
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.cio.CIO
@@ -16,6 +15,11 @@ import io.ktor.http.ContentType
 import io.ktor.http.URLProtocol
 import io.ktor.http.headersOf
 import io.ktor.util.KtorExperimentalAPI
+import net.publicmethod.domain.Board
+import net.publicmethod.domain.Boards
+import net.publicmethod.domain.GloUser
+import net.publicmethod.dtos.BoardDTO
+import net.publicmethod.dtos.BoardDTOs
 import net.publicmethod.dtos.GloUserDTO
 
 class GloApi @KtorExperimentalAPI constructor(
@@ -26,23 +30,31 @@ class GloApi @KtorExperimentalAPI constructor(
     }
 )
 {
-    suspend fun getUser(): GloUserDTO =
+
+    suspend fun getUser(): GloUser =
+        getUserDTO().transform()
+
+    suspend fun getBoards(): Boards =
+        getBoardDTOs().map { it.transform<Board>() }
+
+    suspend fun getBoard(boardId: String): Board =
+        getBoardDTO(boardId).transform()
+
+    private suspend fun getUserDTO(): GloUserDTO =
         httpClient.get { buildURLFor(USER_ENDPOINT) }
 
-    suspend fun getBoards(): List<BoardDTO> =
+    private suspend fun getBoardDTOs(): BoardDTOs =
         httpClient.get { buildURLFor(BOARDS_ENDPOINT) }
 
-    suspend fun getBoard(boardId: String): GloBoardDTO =
-        httpClient.get {
-            buildURLFor(BOARD_ENDPOINT, boardId)
-        }
+    private suspend fun getBoardDTO(boardId: String): BoardDTO =
+        httpClient.get { buildURLFor(BOARD_ENDPOINT, boardId) }
 
     private fun HttpRequestBuilder.buildURLFor(endpoint: String, boardId: String? = "")
     {
-            url {
+        url {
             protocol = URLProtocol.HTTPS
             host = HOST
-                encodedPath = "$ENCODED_PATH$endpoint$boardId"
+            encodedPath = "$ENCODED_PATH$endpoint$boardId"
             parameters.append(QUERY_ACCESS_TOKEN, personalAuthenticationToken)
             headersOf("Content-Type" to listOf(ContentType.Application.Json.toString()))
         }

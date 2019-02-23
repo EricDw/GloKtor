@@ -1,9 +1,6 @@
-package net.publicmethod
+package glo_api
 
-import dtos.BoardDTO
-import dtos.GloBoardDTO
 import io.ktor.client.HttpClient
-import io.ktor.client.call.call
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockHttpRequest
 import io.ktor.client.engine.mock.MockHttpResponse
@@ -11,14 +8,15 @@ import io.ktor.client.engine.mock.responseError
 import io.ktor.client.features.json.GsonSerializer
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.logging.LogLevel
-import io.ktor.client.request.get
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.io.ByteReadChannel
 import kotlinx.coroutines.runBlocking
-import net.publicmethod.dtos.GloUserDTO
+import net.publicmethod.domain.Board
+import net.publicmethod.domain.GloUser
+import net.publicmethod.glo_api.GloApi
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -26,32 +24,6 @@ class GloApiTests
 {
 
     private val userJson = """{"id":"some-gi-ber-ish","username":"Test User"}"""
-
-    @Test
-    fun `given user endpoint when getUser then return GloUserDTO`() = runBlocking {
-        // Arrange
-        val expected = GloUserDTO(id = "some-gi-ber-ish", name = "Test User")
-
-        val client = generateHttpClientWithMockEngine {
-            when (url.encodedPath)
-            {
-                "user" ->
-                {
-                    generateMockHttpResponseFor(userJson)
-                }
-                else ->
-                    generate404MockHttpResponse()
-            }
-        }
-        // Act
-        val actual = client.get<GloUserDTO>("/user")
-
-
-        // Assert
-        assertEquals(expected, actual)
-        assertEquals("application/json", client.call("/user").response.headers["Content-Type"])
-        assertEquals("Not Found other/path", client.get("/other/path"))
-    }
 
     @KtorExperimentalAPI
     @Test
@@ -75,7 +47,8 @@ class GloApiTests
             logLevel = LogLevel.ALL,
             httpClient = client
         )
-        val expected = GloUserDTO(id = "some-gi-ber-ish", name = "Test User")
+
+        val expected = GloUser(id = "some-gi-ber-ish", userName = "Test User")
 
         // Act
         val actual = gloApi.getUser()
@@ -111,8 +84,8 @@ class GloApiTests
             httpClient = client
         )
         val expected = listOf(
-            BoardDTO(id = "some-gi-ber-ish1", name = "Test Board1"),
-            BoardDTO(id = "some-gi-ber-ish2", name = "Test Board2")
+            Board(id = "some-gi-ber-ish1", name = "Test Board1"),
+            Board(id = "some-gi-ber-ish2", name = "Test Board2")
         )
 
         // Act
@@ -130,7 +103,7 @@ class GloApiTests
     fun `given PAT when getBoard then return GloBoardDTO`() = runBlocking {
 
         // Arrange
-        val expected = GloBoardDTO(id = "some-gi-ber-ish1", name = "Test Board1")
+        val expected = Board(id = "some-gi-ber-ish1", name = "Test Board1")
         val client = generateHttpClientWithMockEngine {
             when (url.encodedPath)
             {
