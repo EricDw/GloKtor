@@ -39,8 +39,8 @@ typealias InvitedMemberDTOs = List<InvitedMemberDTO>
 
 data class InvitedMemberDTO(
     val id: String,
-    val role: String?,
-    val username: String
+    val username: String,
+    val role: String?
 ) : GloDTO()
 
 typealias LabelDTOs = List<LabelDTO>

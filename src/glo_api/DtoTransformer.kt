@@ -72,7 +72,9 @@ private fun LabelDTO.transformToLabel(): Label =
     Label(
         id = id,
         name = name,
-        color = color?.transform() ?: Color()
+        color = color?.transform() ?: Color(),
+        createdBy = created_by?.transform() ?: CreatedBy(),
+        createdDate = created_date ?: ""
     )
 
 private fun MemberDTO.transformToMember(): Member =

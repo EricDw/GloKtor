@@ -1,21 +1,17 @@
 package net.publicmethod
 
-import io.ktor.application.*
-import io.ktor.response.*
-import io.ktor.request.*
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.features.json.*
-import io.ktor.client.request.*
-import java.net.URL
-import kotlinx.coroutines.*
-import io.ktor.client.features.logging.*
-import kotlin.test.*
-import io.ktor.server.testing.*
-import io.ktor.client.engine.mock.*
-import io.ktor.http.*
-import kotlinx.coroutines.io.*
-import io.ktor.client.call.*
+import io.ktor.client.HttpClient
+import io.ktor.client.call.call
+import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.MockHttpResponse
+import io.ktor.client.engine.mock.responseError
+import io.ktor.client.request.get
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.headersOf
+import kotlinx.coroutines.io.ByteReadChannel
+import kotlinx.coroutines.runBlocking
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class ApplicationTest
 {
