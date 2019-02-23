@@ -1,12 +1,11 @@
-package glo_api
+package glo_api.anti_corruption
 
-import glo_api.anti_corruption.transform
 import net.publicmethod.domain.*
 import net.publicmethod.dtos.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-internal class DtoTransformerTests
+class DtoTransformerTests
 {
 
     @Test
