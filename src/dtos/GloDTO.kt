@@ -43,7 +43,6 @@ data class InvitedMemberDTO(
     val username: String
 ) : GloDTO()
 
-
 typealias LabelDTOs = List<LabelDTO>
 
 data class LabelDTO(
