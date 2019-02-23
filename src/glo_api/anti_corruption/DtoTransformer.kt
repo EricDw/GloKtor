@@ -1,4 +1,4 @@
-package glo_api
+package glo_api.anti_corruption
 
 import net.publicmethod.domain.*
 import net.publicmethod.dtos.*

@@ -1,6 +1,6 @@
 package net.publicmethod.glo_api
 
-import glo_api.transform
+import glo_api.anti_corruption.transform
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.cio.CIO
