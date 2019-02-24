@@ -41,12 +41,27 @@ class GloApi @KtorExperimentalAPI constructor(
     suspend fun getBoardsHttpResponse(): HttpResponse =
         httpClient.get { buildURLFor(BOARDS_ENDPOINT) }
 
+    /**
+     * Potentially unsafe operation
+     * and can throw a plethora of exceptions.
+     */
+    @Throws
     suspend fun getUser(): GloUser =
         getUserDTO().transform()
 
+    /**
+     * Potentially unsafe operation
+     * and can throw a plethora of exceptions.
+     */
+    @Throws
     suspend fun getBoards(): Boards =
         getBoardDTOs().map { it.transform<Board>() }
 
+    /**
+     * Potentially unsafe operation
+     * and can throw a plethora of exceptions.
+     */
+    @Throws
     suspend fun getBoard(boardId: String): Board =
         getBoardDTO(boardId).transform()
 
