@@ -17,6 +17,7 @@ import kotlinx.coroutines.runBlocking
 import net.publicmethod.domain.Board
 import net.publicmethod.domain.GloUser
 import net.publicmethod.glo_api.GloApi
+import net.publicmethod.glo_api.UserQueryBuilder
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -77,6 +78,44 @@ class GloApiTests
 
         // Act
         val actual = gloApi.getUser(input)
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
+    @KtorExperimentalAPI
+    @Test
+    fun `given PAT when getUser with UserQuery then return correct GloUserDTO`() = runBlocking {
+
+        // Arrange
+        val client = generateHttpClientWithMockEngine {
+            when (url.parameters.contains(QUERY_NAME_KEY, QUERY_NAME_VALUE))
+            {
+                true ->
+                {
+                    generateMockHttpResponseFor(partialUserJson)
+                }
+                else ->
+                    generate404MockHttpResponse()
+            }
+        }
+
+        val gloApi = GloApi(
+            personalAuthenticationToken = TEST_PAT,
+            logLevel = LogLevel.ALL,
+            httpClient = client
+        )
+
+        val expected = GloUser(
+            id = TEST_ID,
+            name = TEST_NAME
+        )
+        val input = UserQueryBuilder.UserQueryParameter.Name
+
+        // Act
+        val actual = gloApi.queryUser {
+            addParameter(input)
+        }
 
         // Assert
         assertEquals(expected, actual)

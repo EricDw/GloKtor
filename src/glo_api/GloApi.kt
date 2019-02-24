@@ -46,6 +46,14 @@ class GloApi @KtorExperimentalAPI constructor(
      * and can throw a plethora of exceptions.
      */
     @Throws
+    suspend fun queryUser(init: UserQueryBuilder.() -> Unit = {}): GloUser =
+        getUserDTO(UserQueryBuilder().apply(init).build()).transform()
+
+    /**
+     * Potentially unsafe operation
+     * and can throw a plethora of exceptions.
+     */
+    @Throws
     suspend fun getUser(parameters: Map<String, String>? = mapOf()): GloUser =
         getUserDTO(parameters).transform()
 
@@ -65,6 +73,9 @@ class GloApi @KtorExperimentalAPI constructor(
     suspend fun getBoard(boardId: String): Board =
         getBoardDTO(boardId).transform()
 
+    private suspend fun getUserDTO(userQuery: UserQuery): GloUserDTO =
+        httpClient.get { buildURLFor(endpoint = USER_ENDPOINT, parameters = userQuery.userQueryParameters) }
+
     private suspend fun getUserDTO(parameters: Map<String, String>? = mapOf()): GloUserDTO =
         httpClient.get { buildURLFor(endpoint = USER_ENDPOINT, parameters = parameters) }
 
@@ -73,6 +84,24 @@ class GloApi @KtorExperimentalAPI constructor(
 
     private suspend fun getBoardDTO(boardId: String): BoardDTO =
         httpClient.get { buildURLFor(BOARD_ENDPOINT, boardId) }
+
+    private fun HttpRequestBuilder.buildURLFor(
+        endpoint: String,
+        boardId: String? = "",
+        parameters: UserQueryParameters
+    )
+    {
+        mutableMapOf<String, String>().apply {
+            parameters.forEach {
+                when (it)
+                {
+                    is UserQueryBuilder.UserQueryParameter.Name -> this[it.key] = it.value
+                }
+            }
+        }.also {
+            buildURLFor(endpoint, boardId, it)
+        }
+    }
 
     private fun HttpRequestBuilder.buildURLFor(
         endpoint: String,
