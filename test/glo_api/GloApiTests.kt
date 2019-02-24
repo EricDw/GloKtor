@@ -27,6 +27,9 @@ private const val TEST_EMAIL = "test@test.com"
 private const val TEST_CREATED_DATE = "Yesterday"
 private const val TEST_PAT = "test-pat"
 
+private const val QUERY_NAME_KEY = "name"
+private const val QUERY_NAME_VALUE = "name"
+
 class GloApiTests
 {
 
@@ -36,6 +39,48 @@ class GloApiTests
             |"name":"$TEST_NAME",
             |"created_date":"$TEST_CREATED_DATE",
             |"email":"$TEST_EMAIL"}""".trimMargin()
+
+    private val partialUserJson =
+        """{"id":"$TEST_ID",
+            |"name":"$TEST_NAME"}""".trimMargin()
+
+    @KtorExperimentalAPI
+    @Test
+    fun `given PAT when getUser with params then return correct GloUserDTO`() = runBlocking {
+
+        // Arrange
+        val client = generateHttpClientWithMockEngine {
+            when (url.parameters.contains(QUERY_NAME_KEY, QUERY_NAME_VALUE))
+            {
+                true ->
+                {
+                    generateMockHttpResponseFor(partialUserJson)
+                }
+                else ->
+                    generate404MockHttpResponse()
+            }
+        }
+
+        val gloApi = GloApi(
+            personalAuthenticationToken = TEST_PAT,
+            logLevel = LogLevel.ALL,
+            httpClient = client
+        )
+
+        val expected = GloUser(
+            id = TEST_ID,
+            name = TEST_NAME
+        )
+        val input = mapOf(
+            QUERY_NAME_KEY to QUERY_NAME_VALUE
+        )
+
+        // Act
+        val actual = gloApi.getUser(input)
+
+        // Assert
+        assertEquals(expected, actual)
+    }
 
     @KtorExperimentalAPI
     @Test
