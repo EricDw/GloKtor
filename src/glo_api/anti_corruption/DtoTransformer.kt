@@ -105,17 +105,17 @@ private fun CardDTO.transformToCard() =
         description = description?.transform() ?: Description(),
         assignees = assignees?.map { it.transform<Assignee>() } ?: emptyList(),
         labels = labels?.map { it.transform<Label>() } ?: emptyList(),
-        total_task_count = total_task_count ?: 0,
-        completed_task_count = completed_task_count ?: 0,
-        due_date = due_date ?: "",
-        archived_date = archived_date ?: "",
-        attachment_count = attachment_count ?: 0,
-        board_id = board_id ?: "",
-        column_id = column_id ?: "",
-        comment_count = comment_count ?: 0,
-        created_by = created_by?.transform() ?: CreatedBy(),
-        created_date = created_date ?: "",
-        updated_date = updated_date ?: ""
+        totalTaskCount = total_task_count ?: 0,
+        completedTaskCount = completed_task_count ?: 0,
+        dueDate = due_date ?: "",
+        archivedDate = archived_date ?: "",
+        attachmentCount = attachment_count ?: 0,
+        boardId = board_id ?: "",
+        columnId = column_id ?: "",
+        commentCount = comment_count ?: 0,
+        createdBy = created_by?.transform() ?: CreatedBy(),
+        createdDate = created_date ?: "",
+        updatedDate = updated_date ?: ""
     )
 
 private fun AssigneeDTO.transformToAssignee(): Assignee =
@@ -123,11 +123,11 @@ private fun AssigneeDTO.transformToAssignee(): Assignee =
 
 private fun DescriptionDTO.transformToDescription() =
     Description(
-        created_by = created_by?.transform() ?: CreatedBy(),
-        created_date = created_date ?: "",
+        createdBy = created_by?.transform() ?: CreatedBy(),
+        createdDate = created_date ?: "",
         text = text ?: "",
-        updated_by = updated_by?.transform() ?: UpdatedBy(),
-        updated_date = updated_date ?: ""
+        updatedBy = updated_by?.transform() ?: UpdatedBy(),
+        updatedDate = updated_date ?: ""
     )
 
 private fun UpdatedByDTO.transformToUpdatedBy(): UpdatedBy =

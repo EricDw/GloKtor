@@ -87,17 +87,17 @@ internal data class Card(
     val description: Description = Description(),
     val assignees: Assignees = emptyList(),
     val labels: Labels = emptyList(),
-    val total_task_count: Int = 0,
-    val completed_task_count: Int = 0,
-    val due_date: String = "",
-    val archived_date: String = "",
-    val attachment_count: Int = 0,
-    val board_id: String = "",
-    val column_id: String = "",
-    val comment_count: Int = 0,
-    val created_by: CreatedBy = CreatedBy(),
-    val created_date: String = "",
-    val updated_date: String = ""
+    val totalTaskCount: Int = 0,
+    val completedTaskCount: Int = 0,
+    val dueDate: String = "",
+    val archivedDate: String = "",
+    val attachmentCount: Int = 0,
+    val boardId: String = "",
+    val columnId: String = "",
+    val commentCount: Int = 0,
+    val createdBy: CreatedBy = CreatedBy(),
+    val createdDate: String = "",
+    val updatedDate: String = ""
 ) : DomainData()
 
 internal typealias Assignees = List<Assignee>
@@ -108,10 +108,10 @@ internal data class Assignee(
 
 internal data class Description(
     val text: String = "",
-    val created_by: CreatedBy = CreatedBy(),
-    val created_date: String = "",
-    val updated_by: UpdatedBy = UpdatedBy(),
-    val updated_date: String = ""
+    val createdBy: CreatedBy = CreatedBy(),
+    val createdDate: String = "",
+    val updatedBy: UpdatedBy = UpdatedBy(),
+    val updatedDate: String = ""
 ) : DomainData()
 
 internal data class UpdatedBy(
@@ -121,10 +121,10 @@ internal data class UpdatedBy(
 internal data class Comment(
     val id: String = "",
     val text: String = "",
-    val board_id: String = " ",
-    val card_id: String = "",
-    val created_by: CreatedBy = CreatedBy(),
-    val created_date: String = "",
-    val updated_by: UpdatedBy = UpdatedBy(),
-    val updated_date: String = ""
+    val boardId: String = " ",
+    val cardId: String = "",
+    val createdBy: CreatedBy = CreatedBy(),
+    val createdDate: String = "",
+    val updatedBy: UpdatedBy = UpdatedBy(),
+    val updatedDate: String = ""
 )
