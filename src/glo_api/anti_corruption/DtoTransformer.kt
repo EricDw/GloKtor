@@ -18,7 +18,7 @@ internal inline fun <reified T : DomainData> GloDTO.transform(): T = when (this)
     is CardDTO -> transformToCard()
     is AssigneeDTO -> transformToAssignee()
     is DescriptionDTO -> transformToDescription()
-    is UpdatedByDTO -> TODO()
+    is UpdatedByDTO -> transformToUpdatedBy()
 } as T
 
 private fun BoardDTO.transformToBoard(): Board =
@@ -129,4 +129,7 @@ private fun DescriptionDTO.transformToDescription() =
         updated_by = updated_by?.transform() ?: UpdatedBy(),
         updated_date = updated_date ?: ""
     )
+
+private fun UpdatedByDTO.transformToUpdatedBy(): UpdatedBy =
+    UpdatedBy(id ?: "")
 

@@ -242,4 +242,20 @@ class DtoTransformerTests
         assertEquals(expected, actual)
     }
 
+    @Test
+    fun `given UpdatedByDTO when transform then return UpdatedBy`()
+    {
+        // Arrange
+        val expected = UpdatedBy("some-id")
+        val input = UpdatedByDTO(
+            "some-id"
+        )
+
+        // Act
+        val actual = input.transform<UpdatedBy>()
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
 }
