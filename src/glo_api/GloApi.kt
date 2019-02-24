@@ -85,6 +85,16 @@ class GloApi @KtorExperimentalAPI constructor(
         }
     }
 
+    companion object
+    {
+        const val HOST = "gloapi.gitkraken.com"
+        const val ENCODED_PATH = "/v1/glo/"
+        const val USER_ENDPOINT = "user"
+        const val BOARDS_ENDPOINT = "boards"
+        const val BOARD_ENDPOINT = "boards/"
+        const val QUERY_ACCESS_TOKEN = "access_token"
+    }
+
 }
 
 private fun HttpClientConfig<CIOEngineConfig>.configureCioClient(logLevel: LogLevel)
@@ -96,10 +106,3 @@ private fun HttpClientConfig<CIOEngineConfig>.configureCioClient(logLevel: LogLe
         level = logLevel
     }
 }
-
-const val HOST = "gloapi.gitkraken.com"
-const val ENCODED_PATH = "/v1/glo/"
-const val USER_ENDPOINT = "user"
-const val BOARDS_ENDPOINT = "boards"
-const val BOARD_ENDPOINT = "boards/"
-const val QUERY_ACCESS_TOKEN = "access_token"
