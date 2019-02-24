@@ -127,4 +127,4 @@ internal data class Comment(
     val createdDate: String = "",
     val updatedBy: UpdatedBy = UpdatedBy(),
     val updatedDate: String = ""
-)
+) : DomainData()

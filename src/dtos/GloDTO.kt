@@ -125,5 +125,5 @@ internal data class CommentDTO(
     val text: String?,
     val updated_by: UpdatedByDTO?,
     val updated_date: String?
-)
+) : GloDTO()
 
