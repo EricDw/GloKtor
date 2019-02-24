@@ -1,5 +1,7 @@
 package net.publicmethod.dtos
 
+import net.publicmethod.domain.CreatedBy
+
 internal sealed class GloDTO
 
 internal typealias BoardDTOs = List<BoardDTO>
@@ -76,3 +78,54 @@ internal data class GloUserDTO(
     val id: String,
     val username: String
 ) : GloDTO()
+
+internal typealias CardDTOs = List<CardDTO>
+
+internal data class CardDTO(
+    val archived_date: String?,
+    val assignees: AssigneeDTOs,
+    val attachment_count: Int?,
+    val board_id: String?,
+    val column_id: String?,
+    val comment_count: Int?,
+    val completed_task_count: Int?,
+    val created_by: CreatedBy?,
+    val created_date: String?,
+    val description: DescriptionDTO?,
+    val due_date: String?,
+    val id: String?,
+    val labels: LabelDTOs?,
+    val name: String?,
+    val total_task_count: Int?,
+    val updated_date: String?
+) : GloDTO()
+
+internal typealias AssigneeDTOs = List<AssigneeDTO>
+
+internal data class AssigneeDTO(
+    val id: String?
+) : GloDTO()
+
+internal data class DescriptionDTO(
+    val created_by: CreatedByDTO?,
+    val created_date: String?,
+    val text: String?,
+    val updated_by: UpdatedByDTO?,
+    val updated_date: String?
+) : GloDTO()
+
+internal data class UpdatedByDTO(
+    val id: String?
+) : GloDTO()
+
+internal data class CommentDTO(
+    val board_id: String?,
+    val card_id: String?,
+    val created_by: CreatedByDTO?,
+    val created_date: String?,
+    val id: String?,
+    val text: String?,
+    val updated_by: UpdatedByDTO?,
+    val updated_date: String?
+)
+

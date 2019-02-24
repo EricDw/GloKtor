@@ -1,5 +1,7 @@
 package net.publicmethod.domain
 
+import net.publicmethod.dtos.CardDTO
+
 sealed class DomainData
 
 typealias Boards = List<Board>
@@ -76,3 +78,53 @@ data class GloUser(
     val id: String = "",
     val userName: String
 ) : DomainData()
+
+internal typealias CardDTOs = List<CardDTO>
+
+internal data class Card(
+    val archived_date: String = "",
+    val assignees: Assignees = emptyList(),
+    val attachment_count: Int = 0,
+    val board_id: String = "",
+    val column_id: String = "",
+    val comment_count: Int = 0,
+    val completed_task_count: Int = 0,
+    val created_by: CreatedBy = CreatedBy(),
+    val created_date: String = "",
+    val description: Description,
+    val due_date: String = "",
+    val id: String = "",
+    val labels: Labels = emptyList(),
+    val name: String = "",
+    val total_task_count: Int = 0,
+    val updated_date: String = ""
+) : DomainData()
+
+internal typealias Assignees = List<Assignee>
+
+internal data class Assignee(
+    val id: String = ""
+) : DomainData()
+
+internal data class Description(
+    val created_by: CreatedBy = CreatedBy(),
+    val created_date: String = "",
+    val text: String = "",
+    val updated_by: UpdatedBy = UpdatedBy(),
+    val updated_date: String = ""
+) : DomainData()
+
+internal data class UpdatedBy(
+    val id: String = ""
+) : DomainData()
+
+internal data class Comment(
+    val board_id: String = "",
+    val card_id: String = "",
+    val created_by: CreatedBy = CreatedBy(),
+    val created_date: String = "",
+    val id: String = "",
+    val text: String = "",
+    val updated_by: UpdatedBy = UpdatedBy(),
+    val updated_date: String = ""
+)
