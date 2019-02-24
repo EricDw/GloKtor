@@ -222,4 +222,24 @@ class DtoTransformerTests
         assertEquals(expected, actual)
     }
 
+    @Test
+    fun `given DescriptionDTO when transform then return Description`()
+    {
+        // Arrange
+        val expected = Description("some-id")
+        val input = DescriptionDTO(
+            null,
+            null,
+            "Describing things",
+            null,
+            null
+        )
+
+        // Act
+        val actual = input.transform<Description>()
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
 }
