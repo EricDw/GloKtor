@@ -20,10 +20,18 @@ import net.publicmethod.glo_api.GloApi
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+private const val TEST_ID = "some-gi-ber-ish"
+private const val TEST_USERNAME = "Test User"
+private const val TEST_NAME = "test name"
+private const val TEST_EMAIL = "test@test.com"
+private const val TEST_CREATED_DATE = "Yesterday"
+private const val TEST_PAT = "test-pat"
+
 class GloApiTests
 {
 
-    private val userJson = """{"id":"some-gi-ber-ish","username":"Test User"}"""
+    private val userJson =
+        """{"id":"$TEST_ID","username":"$TEST_USERNAME","name":"$TEST_NAME","created_date":"$TEST_CREATED_DATE","email":"$TEST_EMAIL"}"""
 
     @KtorExperimentalAPI
     @Test
@@ -43,12 +51,18 @@ class GloApiTests
         }
 
         val gloApi = GloApi(
-            personalAuthenticationToken = "test-pat",
+            personalAuthenticationToken = TEST_PAT,
             logLevel = LogLevel.ALL,
             httpClient = client
         )
 
-        val expected = GloUser(id = "some-gi-ber-ish", userName = "Test User")
+        val expected = GloUser(
+            id = TEST_ID,
+            userName = TEST_USERNAME,
+            name = TEST_NAME,
+            email = TEST_EMAIL,
+            createdDate = TEST_CREATED_DATE
+        )
 
         // Act
         val actual = gloApi.getUser()
@@ -79,7 +93,7 @@ class GloApiTests
         }
 
         val gloApi = GloApi(
-            personalAuthenticationToken = "test-pat",
+            personalAuthenticationToken = TEST_PAT,
             logLevel = LogLevel.ALL,
             httpClient = client
         )
@@ -117,7 +131,7 @@ class GloApiTests
         }
 
         val gloApi = GloApi(
-            personalAuthenticationToken = "test-pat",
+            personalAuthenticationToken = TEST_PAT,
             logLevel = LogLevel.ALL,
             httpClient = client
         )
@@ -147,7 +161,7 @@ class GloApiTests
         }
 
         val gloApi = GloApi(
-            personalAuthenticationToken = "test-pat",
+            personalAuthenticationToken = TEST_PAT,
             logLevel = LogLevel.ALL,
             httpClient = client
         )
@@ -179,7 +193,7 @@ class GloApiTests
         }
 
         val gloApi = GloApi(
-            personalAuthenticationToken = "test-pat",
+            personalAuthenticationToken = TEST_PAT,
             logLevel = LogLevel.ALL,
             httpClient = client
         )
@@ -211,7 +225,7 @@ class GloApiTests
         }
 
         val gloApi = GloApi(
-            personalAuthenticationToken = "test-pat",
+            personalAuthenticationToken = TEST_PAT,
             logLevel = LogLevel.ALL,
             httpClient = client
         )

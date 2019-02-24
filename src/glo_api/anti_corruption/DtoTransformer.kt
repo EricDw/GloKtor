@@ -97,7 +97,13 @@ private fun ColorDTO.transformToColor(): Color =
     )
 
 private fun GloUserDTO.transformToGloUser(): GloUser =
-    GloUser(id, username)
+    GloUser(
+        id = id ?: "",
+        name = name ?: "",
+        email = email ?: "",
+        userName = username ?: "",
+        createdDate = created_date ?: ""
+    )
 
 private fun CardDTO.transformToCard() =
     Card(
