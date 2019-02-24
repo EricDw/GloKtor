@@ -191,8 +191,8 @@ class DtoTransformerTests
             null,
             null,
             null,
-            "some-id",
             null,
+            "some-id",
             null,
             "Test Card",
             null,
@@ -205,6 +205,5 @@ class DtoTransformerTests
         // Assert
         assertEquals(expected, actual)
     }
-
 
 }

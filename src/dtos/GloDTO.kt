@@ -1,7 +1,5 @@
 package net.publicmethod.dtos
 
-import net.publicmethod.domain.CreatedBy
-
 internal sealed class GloDTO
 
 internal typealias BoardDTOs = List<BoardDTO>
@@ -89,7 +87,7 @@ internal data class CardDTO(
     val column_id: String?,
     val comment_count: Int?,
     val completed_task_count: Int?,
-    val created_by: CreatedBy?,
+    val created_by: CreatedByDTO?,
     val created_date: String?,
     val description: DescriptionDTO?,
     val due_date: String?,
