@@ -76,27 +76,27 @@ data class Color(
 
 data class GloUser(
     val id: String = "",
-    val userName: String
+    val userName: String = ""
 ) : DomainData()
 
 internal typealias CardDTOs = List<CardDTO>
 
 internal data class Card(
-    val archived_date: String = "",
+    val id: String = "",
+    val name: String = "",
+    val description: Description = Description(),
     val assignees: Assignees = emptyList(),
+    val labels: Labels = emptyList(),
+    val total_task_count: Int = 0,
+    val completed_task_count: Int = 0,
+    val due_date: String = "",
+    val archived_date: String = "",
     val attachment_count: Int = 0,
     val board_id: String = "",
     val column_id: String = "",
     val comment_count: Int = 0,
-    val completed_task_count: Int = 0,
     val created_by: CreatedBy = CreatedBy(),
     val created_date: String = "",
-    val description: Description,
-    val due_date: String = "",
-    val id: String = "",
-    val labels: Labels = emptyList(),
-    val name: String = "",
-    val total_task_count: Int = 0,
     val updated_date: String = ""
 ) : DomainData()
 
@@ -107,9 +107,9 @@ internal data class Assignee(
 ) : DomainData()
 
 internal data class Description(
+    val text: String = "",
     val created_by: CreatedBy = CreatedBy(),
     val created_date: String = "",
-    val text: String = "",
     val updated_by: UpdatedBy = UpdatedBy(),
     val updated_date: String = ""
 ) : DomainData()
@@ -119,12 +119,12 @@ internal data class UpdatedBy(
 ) : DomainData()
 
 internal data class Comment(
-    val board_id: String = "",
+    val id: String = "",
+    val text: String = "",
+    val board_id: String = " ",
     val card_id: String = "",
     val created_by: CreatedBy = CreatedBy(),
     val created_date: String = "",
-    val id: String = "",
-    val text: String = "",
     val updated_by: UpdatedBy = UpdatedBy(),
     val updated_date: String = ""
 )

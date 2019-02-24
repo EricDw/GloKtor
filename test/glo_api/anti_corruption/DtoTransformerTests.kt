@@ -175,4 +175,36 @@ class DtoTransformerTests
         assertEquals(expected, actual)
     }
 
+    @Test
+    fun `given CardDTO when transform then return Card`()
+    {
+        // Arrange
+        val expected = Card("some-id", "Test Card")
+        val input = CardDTO(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "some-id",
+            null,
+            null,
+            "Test Card",
+            null,
+            null
+        )
+
+        // Act
+        val actual = input.transform<Card>()
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
+
 }

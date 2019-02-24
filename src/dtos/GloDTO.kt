@@ -83,7 +83,7 @@ internal typealias CardDTOs = List<CardDTO>
 
 internal data class CardDTO(
     val archived_date: String?,
-    val assignees: AssigneeDTOs,
+    val assignees: AssigneeDTOs?,
     val attachment_count: Int?,
     val board_id: String?,
     val column_id: String?,
