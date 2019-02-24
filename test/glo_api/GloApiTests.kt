@@ -31,6 +31,9 @@ private const val TEST_PAT = "test-pat"
 private const val QUERY_NAME_KEY = "name"
 private const val QUERY_NAME_VALUE = "name"
 
+private const val QUERY_EMAIL_KEY = "email"
+private const val QUERY_EMAIL_VALUE = "email"
+
 class GloApiTests
 {
 
@@ -115,6 +118,53 @@ class GloApiTests
         // Act
         val actual = gloApi.queryUser {
             addParameter(input)
+        }
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
+    @KtorExperimentalAPI
+    @Test
+    fun `given PAT when queryUser with all params then return correct GloUserDTO`() = runBlocking {
+
+        // Arrange
+        val client = generateHttpClientWithMockEngine {
+            when (url.parameters.contains(QUERY_EMAIL_KEY, QUERY_EMAIL_VALUE))
+            {
+                true ->
+                {
+                    generateMockHttpResponseFor(userJson)
+                }
+                else ->
+                    generate404MockHttpResponse()
+            }
+        }
+
+        val gloApi = GloApi(
+            personalAuthenticationToken = TEST_PAT,
+            logLevel = LogLevel.ALL,
+            httpClient = client
+        )
+
+        val expected = GloUser(
+            id = TEST_ID,
+            userName = TEST_USERNAME,
+            name = TEST_NAME,
+            email = TEST_EMAIL,
+            createdDate = TEST_CREATED_DATE
+        )
+        val name = UserQueryBuilder.UserQueryParameter.Name
+        val userName = UserQueryBuilder.UserQueryParameter.UserName
+        val createdDate = UserQueryBuilder.UserQueryParameter.CreatedDate
+        val email = UserQueryBuilder.UserQueryParameter.Email
+
+        // Act
+        val actual = gloApi.queryUser {
+            addParameter(name)
+            addParameter(userName)
+            addParameter(createdDate)
+            addParameter(email)
         }
 
         // Assert

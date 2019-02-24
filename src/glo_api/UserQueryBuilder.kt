@@ -20,6 +20,24 @@ class UserQueryBuilder
             const val value = "name"
         }
 
+        object UserName : UserQueryParameter()
+        {
+            const val key = "username"
+            const val value = "username"
+        }
+
+        object CreatedDate : UserQueryParameter()
+        {
+            const val key = "created_date"
+            const val value = "created_date"
+        }
+
+        object Email : UserQueryParameter()
+        {
+            const val key = "email"
+            const val value = "email"
+        }
+
     }
 
 }
@@ -27,6 +45,3 @@ class UserQueryBuilder
 typealias UserQueryParameters = Set<UserQueryBuilder.UserQueryParameter>
 
 data class UserQuery(val userQueryParameters: UserQueryParameters = setOf())
-
-fun buildUserQuery(init: UserQueryBuilder.() -> Unit): UserQuery =
-    UserQueryBuilder().apply(init).build()

@@ -89,19 +89,7 @@ class GloApi @KtorExperimentalAPI constructor(
         endpoint: String,
         boardId: String? = "",
         parameters: UserQueryParameters
-    )
-    {
-        mutableMapOf<String, String>().apply {
-            parameters.forEach {
-                when (it)
-                {
-                    is UserQueryBuilder.UserQueryParameter.Name -> this[it.key] = it.value
-                }
-            }
-        }.also {
-            buildURLFor(endpoint, boardId, it)
-        }
-    }
+    ) = buildURLFor(endpoint, boardId, parameters.toMap())
 
     private fun HttpRequestBuilder.buildURLFor(
         endpoint: String,
@@ -141,4 +129,21 @@ private fun HttpClientConfig<CIOEngineConfig>.configureCioClient(logLevel: LogLe
     install(Logging) {
         level = logLevel
     }
+}
+
+fun UserQueryParameters.toMap(): Map<String, String>
+{
+    val pairs: MutableList<Pair<String, String>> = mutableListOf()
+    forEach {
+        pairs.add(
+            when (it)
+            {
+                is UserQueryBuilder.UserQueryParameter.Name -> it.key to it.value
+                is UserQueryBuilder.UserQueryParameter.UserName -> it.key to it.value
+                is UserQueryBuilder.UserQueryParameter.CreatedDate -> it.key to it.value
+                is UserQueryBuilder.UserQueryParameter.Email -> it.key to it.value
+            }
+        )
+    }
+    return pairs.toMap()
 }
