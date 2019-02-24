@@ -130,8 +130,12 @@ data class Color(
  */
 data class GloUser(
     val id: String = "",
+    val name: String,
     @SerializedName("username")
-    val userName: String = ""
+    val userName: String = "",
+    val email: String,
+    @SerializedName("created_date")
+    val createdDate: String
 ) : DomainData()
 
 internal typealias CardDTOs = List<CardDTO>

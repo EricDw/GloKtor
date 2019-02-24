@@ -281,4 +281,32 @@ class DtoTransformerTests
         assertEquals(expected, actual)
     }
 
+    @Test
+    fun `given GloUserDTO when transform then return GloUser`()
+    {
+        // Arrange
+        val expected = GloUser(
+            id = "some-id",
+            name = "Test User",
+            userName = "test_user",
+            email = "test@user.com",
+            createdDate = "Yesterday"
+
+        )
+
+        val input = GloUserDTO(
+            id = "some-id",
+            name = "Test User",
+            username = "test_user",
+            email = "test@user.com",
+            created_date = "Yesterday"
+        )
+
+        // Act
+        val actual = input.transform<GloUser>()
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
 }

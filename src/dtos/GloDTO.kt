@@ -73,8 +73,11 @@ internal data class ColorDTO(
 ) : GloDTO()
 
 internal data class GloUserDTO(
-    val id: String,
-    val username: String
+    val id: String?,
+    val username: String?,
+    val name: String?,
+    val email: String?,
+    val created_date: String?
 ) : GloDTO()
 
 internal typealias CardDTOs = List<CardDTO>
