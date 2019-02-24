@@ -258,4 +258,27 @@ class DtoTransformerTests
         assertEquals(expected, actual)
     }
 
+    @Test
+    fun `given CommentDTO when transform then return Comment`()
+    {
+        // Arrange
+        val expected = Comment("some-id", "This card is a testing card")
+        val input = CommentDTO(
+            null,
+            null,
+            null,
+            null,
+            "some-id",
+            null,
+            null,
+            null
+        )
+
+        // Act
+        val actual = input.transform<Comment>()
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
 }
