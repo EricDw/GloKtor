@@ -206,4 +206,20 @@ class DtoTransformerTests
         assertEquals(expected, actual)
     }
 
+    @Test
+    fun `given AssigneeDTO when transform then return Assignee`()
+    {
+        // Arrange
+        val expected = Assignee("some-id")
+        val input = AssigneeDTO(
+            "some-id"
+        )
+
+        // Act
+        val actual = input.transform<Assignee>()
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
 }
