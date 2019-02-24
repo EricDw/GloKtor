@@ -68,9 +68,6 @@ class GloApi @KtorExperimentalAPI constructor(
     private suspend fun getUserDTO(parameters: Map<String, String>? = mapOf()): GloUserDTO =
         httpClient.get { buildURLFor(endpoint = USER_ENDPOINT, parameters = parameters) }
 
-    private suspend fun getUserDTO(): GloUserDTO =
-        httpClient.get { buildURLFor(USER_ENDPOINT) }
-
     private suspend fun getBoardDTOs(): BoardDTOs =
         httpClient.get { buildURLFor(BOARDS_ENDPOINT) }
 
