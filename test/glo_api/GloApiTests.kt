@@ -31,7 +31,11 @@ class GloApiTests
 {
 
     private val userJson =
-        """{"id":"$TEST_ID","username":"$TEST_USERNAME","name":"$TEST_NAME","created_date":"$TEST_CREATED_DATE","email":"$TEST_EMAIL"}"""
+        """{"id":"$TEST_ID",
+            |"username":"$TEST_USERNAME",
+            |"name":"$TEST_NAME",
+            |"created_date":"$TEST_CREATED_DATE",
+            |"email":"$TEST_EMAIL"}""".trimMargin()
 
     @KtorExperimentalAPI
     @Test
