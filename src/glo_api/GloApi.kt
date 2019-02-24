@@ -46,16 +46,8 @@ class GloApi @KtorExperimentalAPI constructor(
      * and can throw a plethora of exceptions.
      */
     @Throws
-    suspend fun getUser(parameters: Map<String, String>): GloUser =
+    suspend fun getUser(parameters: Map<String, String>? = mapOf()): GloUser =
         getUserDTO(parameters).transform()
-
-    /**
-     * Potentially unsafe operation
-     * and can throw a plethora of exceptions.
-     */
-    @Throws
-    suspend fun getUser(): GloUser =
-        getUserDTO().transform()
 
     /**
      * Potentially unsafe operation
@@ -73,7 +65,7 @@ class GloApi @KtorExperimentalAPI constructor(
     suspend fun getBoard(boardId: String): Board =
         getBoardDTO(boardId).transform()
 
-    private suspend fun getUserDTO(parameters: Map<String, String>): GloUserDTO =
+    private suspend fun getUserDTO(parameters: Map<String, String>? = mapOf()): GloUserDTO =
         httpClient.get { buildURLFor(endpoint = USER_ENDPOINT, parameters = parameters) }
 
     private suspend fun getUserDTO(): GloUserDTO =
@@ -88,14 +80,14 @@ class GloApi @KtorExperimentalAPI constructor(
     private fun HttpRequestBuilder.buildURLFor(
         endpoint: String,
         boardId: String? = "",
-        parameters: Map<String, String> = mapOf()
+        parameters: Map<String, String>? = mapOf()
     )
     {
         url {
             protocol = URLProtocol.HTTPS
             host = HOST
             encodedPath = "$ENCODED_PATH$endpoint$boardId"
-            parameters.forEach {
+            parameters?.forEach {
                 this.parameters.append(it.key, it.value)
             }
             this.parameters.append(QUERY_ACCESS_TOKEN, personalAuthenticationToken)
