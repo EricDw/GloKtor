@@ -226,7 +226,7 @@ class DtoTransformerTests
     fun `given DescriptionDTO when transform then return Description`()
     {
         // Arrange
-        val expected = Description("some-id")
+        val expected = Description(text = "Describing things")
         val input = DescriptionDTO(
             null,
             null,
