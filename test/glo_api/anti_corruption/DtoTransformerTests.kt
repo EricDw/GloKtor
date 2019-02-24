@@ -269,7 +269,7 @@ class DtoTransformerTests
             null,
             null,
             "some-id",
-            null,
+            "This card is a testing card",
             null,
             null
         )

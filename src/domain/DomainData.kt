@@ -121,7 +121,7 @@ internal data class UpdatedBy(
 internal data class Comment(
     val id: String = "",
     val text: String = "",
-    val boardId: String = " ",
+    val boardId: String = "",
     val cardId: String = "",
     val createdBy: CreatedBy = CreatedBy(),
     val createdDate: String = "",
