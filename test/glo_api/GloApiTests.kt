@@ -131,7 +131,7 @@ class GloApiTests
 
     @KtorExperimentalAPI
     @Test
-    fun `given PAT when getUser then return HttpResponse`() = runBlocking {
+    fun `given PAT when getUserHttpResponse then return HttpResponse`() = runBlocking {
 
         // Arrange
         val client = generateHttpClientWithMockEngine {
@@ -156,6 +156,38 @@ class GloApiTests
 
         // Act
         val actual = gloApi.getUserHttpResponse().status
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
+    @KtorExperimentalAPI
+    @Test
+    fun `given PAT when getBoardHttpResponse then return HttpResponse`() = runBlocking {
+
+        // Arrange
+        val client = generateHttpClientWithMockEngine {
+            when (url.encodedPath)
+            {
+                "/v1/glo/boards/${"some-gi-ber-ish1"}" ->
+                {
+                    generateMockHttpResponseFor(boardJson)
+                }
+                else ->
+                    generate404MockHttpResponse()
+            }
+        }
+
+        val gloApi = GloApi(
+            personalAuthenticationToken = "test-pat",
+            logLevel = LogLevel.ALL,
+            httpClient = client
+        )
+
+        val expected = HttpStatusCode.OK
+
+        // Act
+        val actual = gloApi.getBoardHttpResponse("some-gi-ber-ish1").status
 
         // Assert
         assertEquals(expected, actual)
