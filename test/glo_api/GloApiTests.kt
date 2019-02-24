@@ -129,6 +129,39 @@ class GloApiTests
         assertEquals(expected, actual)
     }
 
+    @KtorExperimentalAPI
+    @Test
+    fun `given PAT when getUser then return HttpResponse`() = runBlocking {
+
+        // Arrange
+        val client = generateHttpClientWithMockEngine {
+            when (url.encodedPath)
+            {
+                "/v1/glo/user" ->
+                {
+                    generateMockHttpResponseFor(userJson)
+                }
+                else ->
+                    generate404MockHttpResponse()
+            }
+        }
+
+        val gloApi = GloApi(
+            personalAuthenticationToken = "test-pat",
+            logLevel = LogLevel.ALL,
+            httpClient = client
+        )
+
+        val expected = HttpStatusCode.OK
+
+        // Act
+        val actual = gloApi.getUserHttpResponse().status
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
+
 }
 
 private fun generateHttpClientWithMockEngine(block: MockHttpRequest.() -> MockHttpResponse): HttpClient

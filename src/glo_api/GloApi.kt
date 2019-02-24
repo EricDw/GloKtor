@@ -11,6 +11,7 @@ import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
+import io.ktor.client.response.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.URLProtocol
 import io.ktor.http.headersOf
@@ -30,6 +31,10 @@ class GloApi @KtorExperimentalAPI constructor(
     }
 )
 {
+
+
+    suspend fun getUserHttpResponse(): HttpResponse =
+        httpClient.get { buildURLFor(USER_ENDPOINT) }
 
     suspend fun getUser(): GloUser =
         getUserDTO().transform()
