@@ -38,6 +38,9 @@ class GloApi @KtorExperimentalAPI constructor(
     suspend fun getBoardHttpResponse(boardId: String): HttpResponse =
         httpClient.get { buildURLFor(BOARD_ENDPOINT, boardId) }
 
+    suspend fun getBoardsHttpResponse(): HttpResponse =
+        httpClient.get { buildURLFor(BOARDS_ENDPOINT) }
+
     suspend fun getUser(): GloUser =
         getUserDTO().transform()
 
