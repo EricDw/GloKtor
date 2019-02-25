@@ -1,5 +1,8 @@
 package net.publicmethod.glo_api
 
+import domain.UserQuery
+import domain.UserQueryBuilder
+import domain.UserQueryParameters
 import glo_api.anti_corruption.transform
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
@@ -35,11 +38,7 @@ class GloApi @KtorExperimentalAPI constructor(
 )
 {
 
-    /**
-     * Potentially unsafe operation
-     * and can throw a plethora of exceptions.
-     */
-    @Throws
+
     suspend fun queryUserHttpResponse(init: UserQueryBuilder.() -> Unit = {}): HttpResponse =
         httpClient.get {
             buildURLFor(

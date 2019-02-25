@@ -1,4 +1,4 @@
-package net.publicmethod.glo_api
+package domain
 
 class UserQueryBuilder
 {
