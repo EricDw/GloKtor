@@ -41,7 +41,6 @@ class GloApi @KtorExperimentalAPI constructor(
      */
     @Throws
     suspend fun queryUserHttpResponse(init: UserQueryBuilder.() -> Unit = {}): HttpResponse =
-    // TODO: 2019-02-25 - Test this function - before push
         httpClient.get {
             buildURLFor(
                 endpoint = USER_ENDPOINT,
