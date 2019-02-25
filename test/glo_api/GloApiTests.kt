@@ -17,7 +17,7 @@ import kotlinx.coroutines.runBlocking
 import net.publicmethod.domain.Board
 import net.publicmethod.domain.GloUser
 import net.publicmethod.glo_api.GloApi
-import net.publicmethod.glo_api.UserQueryBuilder
+import net.publicmethod.glo_api.UserQueryBuilder.UserQueryParameter.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -76,7 +76,7 @@ class GloApiTests
             id = TEST_ID,
             name = TEST_NAME
         )
-        val input = UserQueryBuilder.UserQueryParameter.Name
+        val input = Name
 
         // Act
         val actual = gloApi.queryUser {
@@ -117,10 +117,10 @@ class GloApiTests
             email = TEST_EMAIL,
             createdDate = TEST_CREATED_DATE
         )
-        val name = UserQueryBuilder.UserQueryParameter.Name
-        val userName = UserQueryBuilder.UserQueryParameter.UserName
-        val createdDate = UserQueryBuilder.UserQueryParameter.CreatedDate
-        val email = UserQueryBuilder.UserQueryParameter.Email
+        val name = Name
+        val userName = UserName
+        val createdDate = CreatedDate
+        val email = Email
 
         // Act
         val actual = gloApi.queryUser {
@@ -243,6 +243,41 @@ class GloApiTests
         // Assert
         assertEquals(expected, actual)
     }
+
+    @KtorExperimentalAPI
+    @Test
+    fun `given PAT when queryUserHttpResponse then return HttpResponse`() = runBlocking {
+
+        // Arrange
+        val client = generateHttpClientWithMockEngine {
+            when (url.encodedPath)
+            {
+                "/v1/glo/user" ->
+                {
+                    generateMockHttpResponseFor(partialUserJson)
+                }
+                else ->
+                    generate404MockHttpResponse()
+            }
+        }
+
+        val gloApi = GloApi(
+            personalAuthenticationToken = TEST_PAT,
+            logLevel = LogLevel.ALL,
+            httpClient = client
+        )
+
+        val expected = HttpStatusCode.OK
+
+        // Act
+        val actual = gloApi.queryUserHttpResponse {
+            addParameter(Name)
+        }.status
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
 
     @KtorExperimentalAPI
     @Test
