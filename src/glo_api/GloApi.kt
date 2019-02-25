@@ -95,11 +95,11 @@ class GloApi @KtorExperimentalAPI constructor(
             protocol = URLProtocol.HTTPS
             host = HOST
             encodedPath = "$ENCODED_PATH$endpoint$boardId"
-            parameters?.run {
-                this@url.parameters.appendAll(parameters.first, parameters.second)
+            parameters?.second?.forEach {
+                this.parameters.append(parameters.first, it)
             }
-            this.parameters.append(QUERY_ACCESS_TOKEN, personalAuthenticationToken)
             headersOf("Content-Type" to listOf(ContentType.Application.Json.toString()))
+            headers.append(HEADER_AUTHORIZATION, "Bearer $personalAuthenticationToken")
         }
     }
 
@@ -110,7 +110,7 @@ class GloApi @KtorExperimentalAPI constructor(
         const val USER_ENDPOINT = "user"
         const val BOARDS_ENDPOINT = "boards"
         const val BOARD_ENDPOINT = "boards/"
-        const val QUERY_ACCESS_TOKEN = "access_token"
+        const val HEADER_AUTHORIZATION = "Authorization"
     }
 
 }
