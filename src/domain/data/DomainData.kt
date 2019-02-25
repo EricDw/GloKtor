@@ -1,4 +1,4 @@
-package net.publicmethod.domain
+package domain.data
 
 import com.google.gson.annotations.SerializedName
 import net.publicmethod.dtos.CardDTO

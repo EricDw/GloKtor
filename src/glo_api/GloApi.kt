@@ -1,8 +1,11 @@
 package net.publicmethod.glo_api
 
-import domain.UserQuery
-import domain.UserQueryBuilder
-import domain.UserQueryParameters
+import domain.data.Board
+import domain.data.Boards
+import domain.data.GloUser
+import domain.queries.UserQuery
+import domain.queries.UserQueryBuilder
+import domain.queries.UserQueryParameters
 import glo_api.anti_corruption.transform
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
@@ -21,9 +24,6 @@ import io.ktor.http.ContentType
 import io.ktor.http.URLProtocol
 import io.ktor.http.headersOf
 import io.ktor.util.KtorExperimentalAPI
-import net.publicmethod.domain.Board
-import net.publicmethod.domain.Boards
-import net.publicmethod.domain.GloUser
 import net.publicmethod.dtos.BoardDTO
 import net.publicmethod.dtos.BoardDTOs
 import net.publicmethod.dtos.GloUserDTO

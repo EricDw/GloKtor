@@ -1,6 +1,6 @@
 package glo_api.anti_corruption
 
-import net.publicmethod.domain.*
+import domain.data.*
 import net.publicmethod.dtos.*
 import kotlin.test.Test
 import kotlin.test.assertEquals

@@ -1,6 +1,8 @@
 package glo_api
 
-import domain.UserQueryBuilder.UserQueryParameter.*
+import domain.data.Board
+import domain.data.GloUser
+import domain.queries.UserQueryBuilder.UserQueryParameter.*
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockHttpRequest
@@ -15,8 +17,6 @@ import io.ktor.http.headersOf
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.io.ByteReadChannel
 import kotlinx.coroutines.runBlocking
-import net.publicmethod.domain.Board
-import net.publicmethod.domain.GloUser
 import net.publicmethod.glo_api.GloApi
 import kotlin.test.Test
 import kotlin.test.assertEquals
