@@ -5,12 +5,14 @@ import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.engine.cio.CIOEngineConfig
+import io.ktor.client.features.defaultRequest
 import io.ktor.client.features.json.GsonSerializer
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
+import io.ktor.client.request.host
 import io.ktor.client.response.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.URLProtocol
@@ -22,15 +24,30 @@ import net.publicmethod.domain.GloUser
 import net.publicmethod.dtos.BoardDTO
 import net.publicmethod.dtos.BoardDTOs
 import net.publicmethod.dtos.GloUserDTO
+import net.publicmethod.glo_api.GloApi.Companion.HOST
 
 class GloApi @KtorExperimentalAPI constructor(
     private val personalAuthenticationToken: String,
     private val logLevel: LogLevel = LogLevel.NONE,
     private val httpClient: HttpClient = HttpClient(CIO) {
-        configureCioClient(logLevel)
+        configureCioClient(logLevel, personalAuthenticationToken)
     }
 )
 {
+
+    /**
+     * Potentially unsafe operation
+     * and can throw a plethora of exceptions.
+     */
+    @Throws
+    suspend fun queryUserHttpResponse(init: UserQueryBuilder.() -> Unit = {}): HttpResponse =
+    // TODO: 2019-02-25 - Test this function - before push
+        httpClient.get {
+            buildURLFor(
+                endpoint = USER_ENDPOINT,
+                parameters = UserQueryBuilder().apply(init).build().userQueryParameters
+            )
+        }
 
     suspend fun getUserHttpResponse(): HttpResponse =
         httpClient.get { buildURLFor(USER_ENDPOINT) }
@@ -98,8 +115,6 @@ class GloApi @KtorExperimentalAPI constructor(
             parameters?.second?.forEach {
                 this.parameters.append(parameters.first, it)
             }
-            headersOf("Content-Type" to listOf(ContentType.Application.Json.toString()))
-            headers.append(HEADER_AUTHORIZATION, "Bearer $personalAuthenticationToken")
         }
     }
 
@@ -115,8 +130,17 @@ class GloApi @KtorExperimentalAPI constructor(
 
 }
 
-private fun HttpClientConfig<CIOEngineConfig>.configureCioClient(logLevel: LogLevel)
+private fun HttpClientConfig<CIOEngineConfig>.configureCioClient(
+    logLevel: LogLevel,
+    personalAuthenticationToken: String
+)
 {
+    defaultRequest {
+        host = HOST
+        headersOf("Content-Type" to listOf(ContentType.Application.Json.toString()))
+        headers.append(GloApi.HEADER_AUTHORIZATION, "Bearer $personalAuthenticationToken")
+    }
+
     install(JsonFeature) {
         serializer = GsonSerializer()
     }

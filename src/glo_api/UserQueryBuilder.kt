@@ -2,17 +2,15 @@ package net.publicmethod.glo_api
 
 class UserQueryBuilder
 {
-    private val _parameters: MutableSet<UserQueryParameter> = mutableSetOf()
-    private val _parameters2: Pair<String, MutableSet<String>> = Pair("fields", mutableSetOf())
+    private val _parameters: Pair<String, MutableSet<String>> = Pair("fields", mutableSetOf())
 
     fun addParameter(userQueryParameter: UserQueryParameter) =
         userQueryParameter.run {
-            _parameters2.second.add(userQueryParameter.value)
-            _parameters.add(userQueryParameter)
+            _parameters.second.add(userQueryParameter.value)
         }
 
     fun build(): UserQuery =
-        UserQuery(_parameters2)
+        UserQuery(_parameters)
 
     sealed class UserQueryParameter
     {

@@ -29,12 +29,6 @@ repositories {
     maven { url 'https://kotlin.bintray.com/kotlinx' }
 }
 
-kotlin {
-    experimental {
-        coroutines "enable"
-    }
-}
-
 dependencies {
     // Kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
