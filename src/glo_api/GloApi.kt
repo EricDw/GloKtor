@@ -54,8 +54,8 @@ class GloApi @KtorExperimentalAPI constructor(
      * and can throw a plethora of exceptions.
      */
     @Throws
-    suspend fun getUser(parameters: Map<String, String>? = mapOf()): GloUser =
-        getUserDTO(parameters).transform()
+    suspend fun getUser(): GloUser =
+        getUserDTO().transform()
 
     /**
      * Potentially unsafe operation
@@ -76,8 +76,8 @@ class GloApi @KtorExperimentalAPI constructor(
     private suspend fun getUserDTO(userQuery: UserQuery): GloUserDTO =
         httpClient.get { buildURLFor(endpoint = USER_ENDPOINT, parameters = userQuery.userQueryParameters) }
 
-    private suspend fun getUserDTO(parameters: Map<String, String>? = mapOf()): GloUserDTO =
-        httpClient.get { buildURLFor(endpoint = USER_ENDPOINT, parameters = parameters) }
+    private suspend fun getUserDTO(): GloUserDTO =
+        httpClient.get { buildURLFor(endpoint = USER_ENDPOINT) }
 
     private suspend fun getBoardDTOs(): BoardDTOs =
         httpClient.get { buildURLFor(BOARDS_ENDPOINT) }
@@ -88,21 +88,15 @@ class GloApi @KtorExperimentalAPI constructor(
     private fun HttpRequestBuilder.buildURLFor(
         endpoint: String,
         boardId: String? = "",
-        parameters: UserQueryParameters
-    ) = buildURLFor(endpoint, boardId, parameters.toMap())
-
-    private fun HttpRequestBuilder.buildURLFor(
-        endpoint: String,
-        boardId: String? = "",
-        parameters: Map<String, String>? = mapOf()
+        parameters: UserQueryParameters? = Pair("", setOf())
     )
     {
         url {
             protocol = URLProtocol.HTTPS
             host = HOST
             encodedPath = "$ENCODED_PATH$endpoint$boardId"
-            parameters?.forEach {
-                this.parameters.append(it.key, it.value)
+            parameters?.run {
+                this@url.parameters.appendAll(parameters.first, parameters.second)
             }
             this.parameters.append(QUERY_ACCESS_TOKEN, personalAuthenticationToken)
             headersOf("Content-Type" to listOf(ContentType.Application.Json.toString()))
@@ -129,21 +123,4 @@ private fun HttpClientConfig<CIOEngineConfig>.configureCioClient(logLevel: LogLe
     install(Logging) {
         level = logLevel
     }
-}
-
-fun UserQueryParameters.toMap(): Map<String, String>
-{
-    val pairs: MutableList<Pair<String, String>> = mutableListOf()
-    forEach {
-        pairs.add(
-            when (it)
-            {
-                is UserQueryBuilder.UserQueryParameter.Name -> it.key to it.value
-                is UserQueryBuilder.UserQueryParameter.UserName -> it.key to it.value
-                is UserQueryBuilder.UserQueryParameter.CreatedDate -> it.key to it.value
-                is UserQueryBuilder.UserQueryParameter.Email -> it.key to it.value
-            }
-        )
-    }
-    return pairs.toMap()
 }
