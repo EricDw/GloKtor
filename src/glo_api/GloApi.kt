@@ -3,9 +3,7 @@ package net.publicmethod.glo_api
 import domain.data.Board
 import domain.data.Boards
 import domain.data.GloUser
-import domain.queries.UserQuery
-import domain.queries.UserQueryBuilder
-import domain.queries.UserQueryParameters
+import domain.queries.*
 import glo_api.anti_corruption.transform
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
@@ -22,6 +20,7 @@ import io.ktor.client.request.host
 import io.ktor.client.response.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.URLProtocol
+import io.ktor.http.append
 import io.ktor.http.headersOf
 import io.ktor.util.KtorExperimentalAPI
 import net.publicmethod.dtos.BoardDTO
@@ -61,6 +60,14 @@ class GloApi @KtorExperimentalAPI constructor(
      * and can throw a plethora of exceptions.
      */
     @Throws
+    suspend fun queryUser2(init: UserQueryBuilder2.() -> Unit = {}): GloUser =
+        getUserDTO2(UserQueryBuilder2().apply(init).build()).transform()
+
+    /**
+     * Potentially unsafe operation
+     * and can throw a plethora of exceptions.
+     */
+    @Throws
     suspend fun queryUser(init: UserQueryBuilder.() -> Unit = {}): GloUser =
         getUserDTO(UserQueryBuilder().apply(init).build()).transform()
 
@@ -87,6 +94,14 @@ class GloApi @KtorExperimentalAPI constructor(
     @Throws
     suspend fun getBoard(boardId: String): Board =
         getBoardDTO(boardId).transform()
+
+    private suspend fun getUserDTO2(userQuery: Query): GloUserDTO =
+        httpClient.get {
+            buildURLFor2(
+                endpoint = USER_ENDPOINT,
+                parameters = userQuery.userQueryParameters
+            )
+        }
 
     private suspend fun getUserDTO(userQuery: UserQuery): GloUserDTO =
         httpClient.get {
@@ -117,6 +132,24 @@ class GloApi @KtorExperimentalAPI constructor(
             encodedPath = "$ENCODED_PATH$endpoint$boardId"
             parameters?.second?.forEach {
                 this.parameters.append(parameters.first, it)
+            }
+        }
+    }
+
+    private fun HttpRequestBuilder.buildURLFor2(
+        endpoint: String,
+        boardId: String? = "",
+        parameters: QueryParameters? = mapOf()
+    )
+    {
+        url {
+            protocol = URLProtocol.HTTPS
+            host = HOST
+            encodedPath = "$ENCODED_PATH$endpoint$boardId"
+            parameters?.forEach { entry  ->
+                entry.value.forEach {
+                    this.parameters.append(entry.key, it)
+                }
             }
         }
     }

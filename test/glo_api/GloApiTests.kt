@@ -3,6 +3,7 @@ package glo_api
 import domain.data.Board
 import domain.data.GloUser
 import domain.queries.UserQueryBuilder.UserQueryParameter.*
+import domain.queries.UserQueryBuilder2
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockHttpRequest
@@ -28,10 +29,9 @@ private const val TEST_EMAIL = "test@test.com"
 private const val TEST_CREATED_DATE = "Yesterday"
 private const val TEST_PAT = "test-pat"
 
-private const val QUERY_NAME_KEY = "fields"
-private const val QUERY_NAME_VALUE = "name"
+private const val QUERY_KEY_FIELDS = "fields"
+private const val QUERY_VALUE_NAME = "name"
 
-private const val QUERY_EMAIL_KEY = "fields"
 private const val QUERY_EMAIL_VALUE = "email"
 
 class GloApiTests
@@ -55,7 +55,7 @@ class GloApiTests
 
         // Arrange
         val client = generateHttpClientWithMockEngine {
-            when (url.parameters.contains(QUERY_NAME_KEY, QUERY_NAME_VALUE))
+            when (url.parameters.contains(QUERY_KEY_FIELDS, QUERY_VALUE_NAME))
             {
                 true ->
                 {
@@ -89,11 +89,49 @@ class GloApiTests
 
     @KtorExperimentalAPI
     @Test
+    fun `given PAT when queryUser with Query then return correct GloUserDTO`() = runBlocking {
+
+        // Arrange
+        val client = generateHttpClientWithMockEngine {
+            when (url.parameters.contains(QUERY_KEY_FIELDS, QUERY_VALUE_NAME))
+            {
+                true ->
+                {
+                    generateMockHttpResponseFor(partialUserJson)
+                }
+                else ->
+                    generate404MockHttpResponse()
+            }
+        }
+
+        val gloApi = GloApi(
+            personalAuthenticationToken = TEST_PAT,
+            logLevel = LogLevel.ALL,
+            httpClient = client
+        )
+
+        val expected = GloUser(
+            id = TEST_ID,
+            name = TEST_NAME
+        )
+        val input = UserQueryBuilder2.UserQueryParameter2.Name2
+
+        // Act
+        val actual = gloApi.queryUser2 {
+            addParameter(input)
+        }
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
+    @KtorExperimentalAPI
+    @Test
     fun `given PAT when queryUser with all params then return correct GloUserDTO`() = runBlocking {
 
         // Arrange
         val client = generateHttpClientWithMockEngine {
-            when (url.parameters.contains(QUERY_EMAIL_KEY, QUERY_EMAIL_VALUE))
+            when (url.parameters.contains(QUERY_KEY_FIELDS, QUERY_EMAIL_VALUE))
             {
                 true ->
                 {
