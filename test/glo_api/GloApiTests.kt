@@ -3,7 +3,7 @@ package glo_api
 import domain.data.Board
 import domain.data.GloUser
 import domain.queries.UserQueryBuilder.UserQueryParameter.*
-import domain.queries.UserQueryBuilder2
+import domain.queries.UserQueryBuilder
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockHttpRequest
@@ -114,7 +114,7 @@ class GloApiTests
             id = TEST_ID,
             name = TEST_NAME
         )
-        val input = UserQueryBuilder2.UserQueryParameter2.Name2
+        val input = UserQueryBuilder.UserQueryParameter.Name
 
         // Act
         val actual = gloApi.queryUser2 {

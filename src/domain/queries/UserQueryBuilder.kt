@@ -1,45 +1,34 @@
 package domain.queries
 
-class UserQueryBuilder
+import domain.queries.UserQueryBuilder.UserQueryParameter
+
+class UserQueryBuilder : QueryBuilder<UserQueryParameter>()
 {
-    private val _parameters: Pair<String, MutableSet<String>> = Pair("fields", mutableSetOf())
-
-    fun addParameter(userQueryParameter: UserQueryParameter) =
-        userQueryParameter.run {
-            _parameters.second.add(userQueryParameter.value)
-        }
-
-    fun build(): UserQuery =
-        UserQuery(_parameters)
-
-    sealed class UserQueryParameter
+    sealed class UserQueryParameter : QueryBuilder.QueryParameter()
     {
-        abstract val value: String
-
         object Name : UserQueryParameter()
         {
+            override val key: String = "fields"
             override val value = "name"
         }
 
         object UserName : UserQueryParameter()
         {
+            override val key: String = "fields"
             override val value = "username"
         }
 
         object CreatedDate : UserQueryParameter()
         {
+            override val key: String = "fields"
             override val value = "created_date"
         }
 
         object Email : UserQueryParameter()
         {
+            override val key: String = "fields"
             override val value = "email"
         }
 
     }
-
 }
-
-typealias UserQueryParameters = Pair<String, Set<String>>
-
-data class UserQuery(val userQueryParameters: UserQueryParameters = Pair("", setOf()))
