@@ -14,7 +14,9 @@ import io.ktor.client.engine.cio.CIOEngineConfig
 import io.ktor.client.features.defaultRequest
 import io.ktor.client.features.json.GsonSerializer
 import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.features.logging.DEFAULT
 import io.ktor.client.features.logging.LogLevel
+import io.ktor.client.features.logging.Logger
 import io.ktor.client.features.logging.Logging
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
@@ -157,5 +159,6 @@ private fun HttpClientConfig<CIOEngineConfig>.configureCioClient(
     }
     install(Logging) {
         level = logLevel
+        logger = Logger.DEFAULT
     }
 }
