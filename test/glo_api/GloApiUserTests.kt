@@ -2,8 +2,8 @@ package glo_api
 
 import domain.data.Board
 import domain.data.GloUser
-import domain.queries.UserQueryBuilder.UserQueryParameter.*
 import domain.queries.UserQueryBuilder
+import domain.queries.UserQueryBuilder.UserQueryParameter.*
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockHttpRequest
@@ -34,7 +34,7 @@ private const val QUERY_VALUE_NAME = "name"
 
 private const val QUERY_EMAIL_VALUE = "email"
 
-class GloApiTests
+class GloApiUserTests
 {
 
     private val userJson =
