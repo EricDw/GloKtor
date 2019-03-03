@@ -5,8 +5,8 @@ internal sealed class GloDTO
 internal typealias BoardDTOs = List<BoardDTO>
 
 internal data class BoardDTO(
-    val id: String,
-    val name: String,
+    val id: String?,
+    val name: String?,
     val archived_columns: ArchivedColumnDTOs?,
     val archived_date: String?,
     val columns: ColumnDTOs?,

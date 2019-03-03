@@ -24,8 +24,8 @@ internal inline fun <reified T : DomainData> GloDTO.transform(): T = when (this)
 
 private fun BoardDTO.transformToBoard(): Board =
     Board(
-        id = id,
-        name = name,
+        id = id ?: "",
+        name = name ?: "",
         archivedColumns = archived_columns?.map {
             it.transform<ArchivedColumn>()
         } ?: emptyList(),
