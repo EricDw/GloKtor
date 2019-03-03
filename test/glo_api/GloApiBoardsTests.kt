@@ -9,7 +9,9 @@ import net.publicmethod.glo_api.GloApi
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-private const val TEST_PAT = "test-pat"
+
+private const val QUERY_VALUE_INVITED_MEMBERS = "invited_members"
+
 
 class GloApiBoardsTests : GloApiTest
 {
@@ -47,10 +49,60 @@ class GloApiBoardsTests : GloApiTest
 * */
 
     private val boardJson =
-        """{"name":"Test Board1","id":"some-gi-ber-ish1"}"""
+        """{"name":"$TEST_BOARD_NAME_1","id":"$TEST_BOARD_ID_1"}"""
 
     private val boardsJson =
-        """[{"name":"Test Board1","id":"some-gi-ber-ish1"},{"name":"Test Board2","id":"some-gi-ber-ish2"}]"""
+        """[{"name":"$TEST_BOARD_NAME_1",
+            |"id":"$TEST_BOARD_ID_1",
+            |"invited_members":[]},
+            |{"name":"$TEST_BOARD_NAME_2",
+            |"id":"$TEST_BOARD_ID_2"}]""".trimMargin()
+
+
+    @KtorExperimentalAPI
+    @Test
+    fun `given PAT when getBoards with BoardsQuery then return correct GloBoardDTOs`() = runBlocking {
+
+        // Arrange
+        val client = generateHttpClientWithMockEngine {
+            when (url.parameters.contains(QUERY_KEY_FIELDS, QUERY_VALUE_INVITED_MEMBERS))
+            {
+                true ->
+                {
+                    generateMockHttpResponseFor(boardsJson)
+                }
+                else ->
+                    generate404MockHttpResponse()
+            }
+        }
+
+        val gloApi = GloApi(
+            personalAuthenticationToken = TEST_PAT,
+            logLevel = LogLevel.ALL,
+            httpClient = client
+        )
+
+        val expected = listOf(
+            Board(
+                id = TEST_BOARD_ID_1,
+                name = TEST_BOARD_NAME_1
+            ),
+            Board(
+                id = TEST_BOARD_ID_2,
+                name = TEST_BOARD_NAME_2
+            )
+        )
+        val input = BoardsQueryBuilder.BoardsQueryParameter.InvitedMembers
+
+        // Act
+        val actual = gloApi.queryBoards {
+            addParameter(input)
+        }
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
 
     @KtorExperimentalAPI
     @Test

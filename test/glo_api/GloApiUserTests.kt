@@ -11,14 +11,10 @@ import net.publicmethod.glo_api.GloApi
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-private const val TEST_ID = "some-gi-ber-ish"
 private const val TEST_USERNAME = "Test User"
-private const val TEST_NAME = "test name"
 private const val TEST_EMAIL = "test@test.com"
 private const val TEST_CREATED_DATE = "Yesterday"
-private const val TEST_PAT = "test-pat"
 
-private const val QUERY_KEY_FIELDS = "fields"
 private const val QUERY_VALUE_NAME = "name"
 
 private const val QUERY_EMAIL_VALUE = "email"
