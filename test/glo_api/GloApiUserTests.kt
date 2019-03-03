@@ -1,6 +1,5 @@
 package glo_api
 
-import domain.data.Board
 import domain.data.GloUser
 import domain.queries.UserQueryBuilder
 import domain.queries.UserQueryBuilder.UserQueryParameter.*
@@ -47,7 +46,6 @@ class GloApiUserTests
     private val partialUserJson =
         """{"id":"$TEST_ID",
             |"name":"$TEST_NAME"}""".trimMargin()
-
 
     @KtorExperimentalAPI
     @Test
@@ -210,78 +208,6 @@ class GloApiUserTests
         assertEquals(expected, actual)
     }
 
-    private val boardsJson =
-        """[{"name":"Test Board1","id":"some-gi-ber-ish1"},{"name":"Test Board2","id":"some-gi-ber-ish2"}]"""
-
-
-    @KtorExperimentalAPI
-    @Test
-    fun `given PAT when getBoards then return GloBoardDTOs`() = runBlocking {
-
-        // Arrange
-        val client = generateHttpClientWithMockEngine {
-            when (url.encodedPath)
-            {
-                "/v1/glo/boards" ->
-                {
-                    generateMockHttpResponseFor(boardsJson)
-                }
-                else ->
-                    generate404MockHttpResponse()
-            }
-        }
-
-        val gloApi = GloApi(
-            personalAuthenticationToken = TEST_PAT,
-            logLevel = LogLevel.ALL,
-            httpClient = client
-        )
-        val expected = listOf(
-            Board(id = "some-gi-ber-ish1", name = "Test Board1"),
-            Board(id = "some-gi-ber-ish2", name = "Test Board2")
-        )
-
-        // Act
-        val actual = gloApi.getBoards()
-
-        // Assert
-        assertEquals(expected, actual)
-    }
-
-    private val boardJson =
-        """{"name":"Test Board1","id":"some-gi-ber-ish1"}"""
-
-    @KtorExperimentalAPI
-    @Test
-    fun `given PAT when getBoard then return GloBoardDTO`() = runBlocking {
-
-        // Arrange
-        val expected = Board(id = "some-gi-ber-ish1", name = "Test Board1")
-        val client = generateHttpClientWithMockEngine {
-            when (url.encodedPath)
-            {
-                "/v1/glo/boards/${expected.id}" ->
-                {
-                    generateMockHttpResponseFor(boardJson)
-                }
-                else ->
-                    generate404MockHttpResponse()
-            }
-        }
-
-        val gloApi = GloApi(
-            personalAuthenticationToken = TEST_PAT,
-            logLevel = LogLevel.ALL,
-            httpClient = client
-        )
-
-        // Act
-        val actual = gloApi.getBoard(expected.id)
-
-        // Assert
-        assertEquals(expected, actual)
-    }
-
     @KtorExperimentalAPI
     @Test
     fun `given PAT when queryUserHttpResponse then return HttpResponse`() = runBlocking {
@@ -316,7 +242,6 @@ class GloApiUserTests
         assertEquals(expected, actual)
     }
 
-
     @KtorExperimentalAPI
     @Test
     fun `given PAT when getUserHttpResponse then return HttpResponse`() = runBlocking {
@@ -344,70 +269,6 @@ class GloApiUserTests
 
         // Act
         val actual = gloApi.getUserHttpResponse().status
-
-        // Assert
-        assertEquals(expected, actual)
-    }
-
-    @KtorExperimentalAPI
-    @Test
-    fun `given PAT when getBoardHttpResponse then return HttpResponse`() = runBlocking {
-
-        // Arrange
-        val client = generateHttpClientWithMockEngine {
-            when (url.encodedPath)
-            {
-                "/v1/glo/boards/${"some-gi-ber-ish1"}" ->
-                {
-                    generateMockHttpResponseFor(boardJson)
-                }
-                else ->
-                    generate404MockHttpResponse()
-            }
-        }
-
-        val gloApi = GloApi(
-            personalAuthenticationToken = TEST_PAT,
-            logLevel = LogLevel.ALL,
-            httpClient = client
-        )
-
-        val expected = HttpStatusCode.OK
-
-        // Act
-        val actual = gloApi.getBoardHttpResponse("some-gi-ber-ish1").status
-
-        // Assert
-        assertEquals(expected, actual)
-    }
-
-    @KtorExperimentalAPI
-    @Test
-    fun `given PAT when getBoardsHttpResponse then return HttpResponse`() = runBlocking {
-
-        // Arrange
-        val client = generateHttpClientWithMockEngine {
-            when (url.encodedPath)
-            {
-                "/v1/glo/boards" ->
-                {
-                    generateMockHttpResponseFor(boardsJson)
-                }
-                else ->
-                    generate404MockHttpResponse()
-            }
-        }
-
-        val gloApi = GloApi(
-            personalAuthenticationToken = TEST_PAT,
-            logLevel = LogLevel.ALL,
-            httpClient = client
-        )
-
-        val expected = HttpStatusCode.OK
-
-        // Act
-        val actual = gloApi.getBoardsHttpResponse().status
 
         // Assert
         assertEquals(expected, actual)
