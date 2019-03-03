@@ -1,6 +1,7 @@
 package glo_api
 
 import domain.data.Board
+import domain.queries.BoardsQueryBuilder
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.http.HttpStatusCode
 import io.ktor.util.KtorExperimentalAPI
@@ -15,38 +16,6 @@ private const val QUERY_VALUE_INVITED_MEMBERS = "invited_members"
 
 class GloApiBoardsTests : GloApiTest
 {
-/*
-* archived_columns
-* archived_date
-* columns
-* created_by
-* created_date
-* invited_members
-* labels
-* members
-* name
-* archived: Boolean
-* page: Int
-* per_page: Int 1..99
-* sort: String
-*
-* All params URL
-* https://gloapi.gitkraken.com/v1/glo/boards
-* ?fields=archived_columns
-* &fields=archived_date
-* &fields=columns
-* &fields=created_by
-* &fields=created_date
-* &fields=invited_members
-* &fields=labels
-* &fields=members
-* &fields=name
-* &archived=true
-* &page=1
-* &per_page=99
-* &sort=asc
-*
-* */
 
     private val boardJson =
         """{"name":"$TEST_BOARD_NAME_1","id":"$TEST_BOARD_ID_1"}"""
