@@ -101,7 +101,7 @@ class GloApiUserTests : GloApiTest
         val input = UserQueryBuilder.UserQueryParameter.Name
 
         // Act
-        val actual = gloApi.queryUser2 {
+        val actual = gloApi.queryUser {
             addParameter(input)
         }
 

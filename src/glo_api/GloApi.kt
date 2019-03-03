@@ -61,14 +61,6 @@ class GloApi @KtorExperimentalAPI constructor(
      * and can throw a plethora of exceptions.
      */
     @Throws
-    suspend fun queryUser2(init: UserQueryBuilder.() -> Unit = {}): GloUser =
-        getUserDTO(UserQueryBuilder().apply(init).build()).transform()
-
-    /**
-     * Potentially unsafe operation
-     * and can throw a plethora of exceptions.
-     */
-    @Throws
     suspend fun queryUser(init: UserQueryBuilder.() -> Unit = {}): GloUser =
         getUserDTO(UserQueryBuilder().apply(init).build()).transform()
 
