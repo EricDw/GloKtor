@@ -3,19 +3,9 @@ package glo_api
 import domain.data.GloUser
 import domain.queries.UserQueryBuilder
 import domain.queries.UserQueryBuilder.UserQueryParameter.*
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.engine.mock.MockHttpRequest
-import io.ktor.client.engine.mock.MockHttpResponse
-import io.ktor.client.engine.mock.responseError
-import io.ktor.client.features.json.GsonSerializer
-import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.logging.LogLevel
-import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.headersOf
 import io.ktor.util.KtorExperimentalAPI
-import kotlinx.coroutines.io.ByteReadChannel
 import kotlinx.coroutines.runBlocking
 import net.publicmethod.glo_api.GloApi
 import kotlin.test.Test
@@ -33,7 +23,7 @@ private const val QUERY_VALUE_NAME = "name"
 
 private const val QUERY_EMAIL_VALUE = "email"
 
-class GloApiUserTests
+class GloApiUserTests : GloApiTest
 {
 
     private val userJson =
@@ -273,32 +263,7 @@ class GloApiUserTests
         // Assert
         assertEquals(expected, actual)
     }
-
 }
 
-private fun generateHttpClientWithMockEngine(block: MockHttpRequest.() -> MockHttpResponse): HttpClient
-{
-    return HttpClient(MockEngine {
-        block()
-    }) {
-        install(JsonFeature) {
-            serializer = GsonSerializer()
-        }
-        expectSuccess = false
-    }
-}
-
-private fun MockHttpRequest.generateMockHttpResponseFor(json: String): MockHttpResponse
-{
-    return MockHttpResponse(
-        call,
-        HttpStatusCode.OK,
-        ByteReadChannel(json.toByteArray(Charsets.UTF_8)),
-        headersOf("Content-Type", ContentType.Application.Json.toString())
-    )
-}
-
-private fun MockHttpRequest.generate404MockHttpResponse() =
-    responseError(HttpStatusCode.NotFound, "Not Found ${url.encodedPath}")
 
 

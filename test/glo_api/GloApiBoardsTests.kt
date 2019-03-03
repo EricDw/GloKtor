@@ -1,39 +1,50 @@
 package glo_api
 
 import domain.data.Board
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.engine.mock.MockHttpRequest
-import io.ktor.client.engine.mock.MockHttpResponse
-import io.ktor.client.engine.mock.responseError
-import io.ktor.client.features.json.GsonSerializer
-import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.logging.LogLevel
-import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.headersOf
 import io.ktor.util.KtorExperimentalAPI
-import kotlinx.coroutines.io.ByteReadChannel
 import kotlinx.coroutines.runBlocking
 import net.publicmethod.glo_api.GloApi
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-private const val TEST_ID = "some-gi-ber-ish"
-private const val TEST_USERNAME = "Test User"
-private const val TEST_NAME = "test name"
-private const val TEST_EMAIL = "test@test.com"
-private const val TEST_CREATED_DATE = "Yesterday"
 private const val TEST_PAT = "test-pat"
 
-private const val QUERY_KEY_FIELDS = "fields"
-private const val QUERY_VALUE_NAME = "name"
-
-private const val QUERY_EMAIL_VALUE = "email"
-
-
-class GloApiBoardsTests
+class GloApiBoardsTests : GloApiTest
 {
+/*
+* archived_columns
+* archived_date
+* columns
+* created_by
+* created_date
+* invited_members
+* labels
+* members
+* name
+* archived: Boolean
+* page: Int
+* per_page: Int 1..99
+* sort: String
+*
+* All params URL
+* https://gloapi.gitkraken.com/v1/glo/boards
+* ?fields=archived_columns
+* &fields=archived_date
+* &fields=columns
+* &fields=created_by
+* &fields=created_date
+* &fields=invited_members
+* &fields=labels
+* &fields=members
+* &fields=name
+* &archived=true
+* &page=1
+* &per_page=99
+* &sort=asc
+*
+* */
 
     private val boardJson =
         """{"name":"Test Board1","id":"some-gi-ber-ish1"}"""
@@ -171,30 +182,5 @@ class GloApiBoardsTests
     }
 
 }
-
-private fun generateHttpClientWithMockEngine(block: MockHttpRequest.() -> MockHttpResponse): HttpClient
-{
-    return HttpClient(MockEngine {
-        block()
-    }) {
-        install(JsonFeature) {
-            serializer = GsonSerializer()
-        }
-        expectSuccess = false
-    }
-}
-
-private fun MockHttpRequest.generateMockHttpResponseFor(json: String): MockHttpResponse
-{
-    return MockHttpResponse(
-        call,
-        HttpStatusCode.OK,
-        ByteReadChannel(json.toByteArray(Charsets.UTF_8)),
-        headersOf("Content-Type", ContentType.Application.Json.toString())
-    )
-}
-
-private fun MockHttpRequest.generate404MockHttpResponse() =
-    responseError(HttpStatusCode.NotFound, "Not Found ${url.encodedPath}")
 
 
