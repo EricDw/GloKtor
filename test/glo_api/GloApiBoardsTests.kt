@@ -1,7 +1,7 @@
 package glo_api
 
 import domain.data.Board
-import domain.queries.BoardsQueryBuilder
+import domain.queries.BoardsQueryBuilder.BoardsQueryParameter.InvitedMembers
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.http.HttpStatusCode
 import io.ktor.util.KtorExperimentalAPI
@@ -61,7 +61,7 @@ class GloApiBoardsTests : GloApiTest
                 name = TEST_BOARD_NAME_2
             )
         )
-        val input = BoardsQueryBuilder.BoardsQueryParameter.InvitedMembers
+        val input = InvitedMembers
 
         // Act
         val actual = gloApi.queryBoards {
@@ -96,8 +96,8 @@ class GloApiBoardsTests : GloApiTest
             httpClient = client
         )
         val expected = listOf(
-            Board(id = "some-gi-ber-ish1", name = "Test Board1"),
-            Board(id = "some-gi-ber-ish2", name = "Test Board2")
+            Board(id = TEST_BOARD_ID_1, name = TEST_BOARD_NAME_1),
+            Board(id = TEST_BOARD_ID_2, name = TEST_BOARD_NAME_2)
         )
 
         // Act
@@ -112,7 +112,7 @@ class GloApiBoardsTests : GloApiTest
     fun `given PAT when getBoard then return GloBoardDTO`() = runBlocking {
 
         // Arrange
-        val expected = Board(id = "some-gi-ber-ish1", name = "Test Board1")
+        val expected = Board(id = TEST_BOARD_ID_1, name = TEST_BOARD_NAME_1)
         val client = generateHttpClientWithMockEngine {
             when (url.encodedPath)
             {
@@ -146,7 +146,7 @@ class GloApiBoardsTests : GloApiTest
         val client = generateHttpClientWithMockEngine {
             when (url.encodedPath)
             {
-                "/v1/glo/boards/${"some-gi-ber-ish1"}" ->
+                "/v1/glo/boards/$TEST_BOARD_ID_1" ->
                 {
                     generateMockHttpResponseFor(boardJson)
                 }
@@ -164,7 +164,7 @@ class GloApiBoardsTests : GloApiTest
         val expected = HttpStatusCode.OK
 
         // Act
-        val actual = gloApi.getBoardHttpResponse("some-gi-ber-ish1").status
+        val actual = gloApi.getBoardHttpResponse(TEST_BOARD_ID_1).status
 
         // Assert
         assertEquals(expected, actual)

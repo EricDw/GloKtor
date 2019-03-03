@@ -3,6 +3,7 @@ package net.publicmethod.glo_api
 import domain.data.Board
 import domain.data.Boards
 import domain.data.GloUser
+import domain.queries.BoardsQueryBuilder
 import domain.queries.Query
 import domain.queries.QueryParameters
 import domain.queries.UserQueryBuilder
@@ -43,7 +44,7 @@ class GloApi @KtorExperimentalAPI constructor(
         httpClient.get {
             buildURLFor(
                 endpoint = USER_ENDPOINT,
-                parameters = UserQueryBuilder().apply(init).build().userQueryParameters
+                parameters = UserQueryBuilder().apply(init).build().queryParameters
             )
         }
 
@@ -55,6 +56,14 @@ class GloApi @KtorExperimentalAPI constructor(
 
     suspend fun getBoardsHttpResponse(): HttpResponse =
         httpClient.get { buildURLFor(BOARDS_ENDPOINT) }
+
+    /**
+     * Potentially unsafe operation
+     * and can throw a plethora of exceptions.
+     */
+    @Throws
+    suspend fun queryBoards(init: BoardsQueryBuilder.() -> Unit = {}): Boards =
+        getBoardDTOs(BoardsQueryBuilder().apply(init).build()).map { it.transform<Board>() }
 
     /**
      * Potentially unsafe operation
@@ -88,16 +97,24 @@ class GloApi @KtorExperimentalAPI constructor(
     suspend fun getBoard(boardId: String): Board =
         getBoardDTO(boardId).transform()
 
-    private suspend fun getUserDTO(userQuery: Query): GloUserDTO =
+    private suspend fun getUserDTO(query: Query): GloUserDTO =
         httpClient.get {
             buildURLFor(
                 endpoint = USER_ENDPOINT,
-                parameters = userQuery.userQueryParameters
+                parameters = query.queryParameters
             )
         }
 
     private suspend fun getUserDTO(): GloUserDTO =
         httpClient.get { buildURLFor(endpoint = USER_ENDPOINT) }
+
+    private suspend fun getBoardDTOs(query: Query): BoardDTOs =
+        httpClient.get {
+            buildURLFor(
+                endpoint = BOARDS_ENDPOINT,
+                parameters = query.queryParameters
+            )
+        }
 
     private suspend fun getBoardDTOs(): BoardDTOs =
         httpClient.get { buildURLFor(BOARDS_ENDPOINT) }
@@ -115,7 +132,7 @@ class GloApi @KtorExperimentalAPI constructor(
             protocol = URLProtocol.HTTPS
             host = HOST
             encodedPath = "$ENCODED_PATH$endpoint$boardId"
-            parameters?.forEach { entry  ->
+            parameters?.forEach { entry ->
                 entry.value.forEach {
                     this.parameters.append(entry.key, it)
                 }

@@ -26,4 +26,4 @@ abstract class QueryBuilder<T : QueryBuilder.QueryParameter>
 
 typealias QueryParameters = Map<String, Set<String>>
 
-data class Query(val userQueryParameters: QueryParameters = mapOf())
+data class Query(val queryParameters: QueryParameters = mapOf())
