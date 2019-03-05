@@ -1,29 +1,19 @@
 package domain.queries
 
-abstract class QueryBuilder<T : QueryBuilder.QueryParameter>
+abstract class QueryBuilder
 {
     private val _parameters: MutableMap<String, MutableSet<String>> = mutableMapOf()
 
-    fun addParameter(userQueryParameter: T): Unit =
-        userQueryParameter.run {
-            if (_parameters.containsKey(key))
-            {
-                _parameters[key]?.add(userQueryParameter.value)
-            } else
-            {
-                _parameters[key] = mutableSetOf(userQueryParameter.value)
-            }
-        }
-
-    fun build(): Query = Query(_parameters)
-
-    abstract class QueryParameter
+    protected fun addParameter(key: String, value: String)
     {
-        abstract val key: String
-        abstract val value: String
+        if (_parameters.containsKey(key))
+            _parameters[key]?.add(value)
+        else
+            _parameters[key] = mutableSetOf(value)
     }
+
+    fun build(): QueryParameters2 = _parameters
+
 }
 
-typealias QueryParameters = Map<String, Set<String>>
-
-data class Query(val queryParameters: QueryParameters = mapOf())
+typealias QueryParameters2 = Map<String, Set<String>>

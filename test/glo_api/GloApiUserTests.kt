@@ -1,8 +1,6 @@
 package glo_api
 
 import domain.data.GloUser
-import domain.queries.UserQueryBuilder
-import domain.queries.UserQueryBuilder.UserQueryParameter.*
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.http.HttpStatusCode
 import io.ktor.util.KtorExperimentalAPI
@@ -60,11 +58,10 @@ class GloApiUserTests : GloApiTest
             id = TEST_ID,
             name = TEST_NAME
         )
-        val input = Name
 
         // Act
         val actual = gloApi.queryUser {
-            addParameter(input)
+            addName()
         }
 
         // Assert
@@ -98,11 +95,10 @@ class GloApiUserTests : GloApiTest
             id = TEST_ID,
             name = TEST_NAME
         )
-        val input = UserQueryBuilder.UserQueryParameter.Name
 
         // Act
         val actual = gloApi.queryUser {
-            addParameter(input)
+            addName()
         }
 
         // Assert
@@ -139,17 +135,13 @@ class GloApiUserTests : GloApiTest
             email = TEST_EMAIL,
             createdDate = TEST_CREATED_DATE
         )
-        val name = Name
-        val userName = UserName
-        val createdDate = CreatedDate
-        val email = Email
 
         // Act
         val actual = gloApi.queryUser {
-            addParameter(name)
-            addParameter(userName)
-            addParameter(createdDate)
-            addParameter(email)
+            addName()
+            addUserName()
+            addCreatedDate()
+            addEmail()
         }
 
         // Assert
@@ -221,7 +213,7 @@ class GloApiUserTests : GloApiTest
 
         // Act
         val actual = gloApi.queryUserHttpResponse {
-            addParameter(Name)
+            addName()
         }.status
 
         // Assert

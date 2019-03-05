@@ -1,35 +1,29 @@
 package domain.queries
 
-import domain.queries.UserQueryBuilder.UserQueryParameter
 import net.publicmethod.domain.queries.*
 
-class UserQueryBuilder : QueryBuilder<UserQueryParameter>()
+class UserQueryBuilder : QueryBuilder()
 {
-    sealed class UserQueryParameter : QueryBuilder.QueryParameter()
-    {
-        object Name : UserQueryParameter()
-        {
-            override val key: String = QUERY_KEY_FIELDS
-            override val value = QUERY_VALUE_NAME
-        }
+    private fun addFieldParameter(value: String) =
+        addParameter(
+            QUERY_KEY_FIELDS,
+            value
+        )
 
-        object UserName : UserQueryParameter()
-        {
-            override val key: String = QUERY_KEY_FIELDS
-            override val value = QUERY_VALUE_USER_NAME
-        }
+    fun addName() = addFieldParameter(
+        QUERY_VALUE_NAME
+    )
 
-        object CreatedDate : UserQueryParameter()
-        {
-            override val key: String = QUERY_KEY_FIELDS
-            override val value = QUERY_VALUE_CREATED_DATE
-        }
+    fun addUserName() = addFieldParameter(
+        QUERY_VALUE_USER_NAME
+    )
 
-        object Email : UserQueryParameter()
-        {
-            override val key: String = QUERY_KEY_FIELDS
-            override val value = QUERY_VALUE_EMAIL
-        }
+    fun addCreatedDate() = addFieldParameter(
+        QUERY_VALUE_CREATED_DATE
+    )
 
-    }
+    fun addEmail() = addFieldParameter(
+        QUERY_VALUE_EMAIL
+    )
+
 }

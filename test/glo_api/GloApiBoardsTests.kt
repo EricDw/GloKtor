@@ -1,7 +1,6 @@
 package glo_api
 
 import domain.data.Board
-import domain.queries.BoardsQueryBuilder.BoardsQueryParameter.InvitedMembers
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.http.HttpStatusCode
 import io.ktor.util.KtorExperimentalAPI
@@ -18,7 +17,8 @@ class GloApiBoardsTests : GloApiTest
 {
 
     private val boardJson =
-        """{"name":"$TEST_BOARD_NAME_1","id":"$TEST_BOARD_ID_1"}"""
+        """{"name":"$TEST_BOARD_NAME_1",
+            |"id":"$TEST_BOARD_ID_1"}""".trimMargin()
 
     private val boardsJson =
         """[{"name":"$TEST_BOARD_NAME_1",
@@ -27,180 +27,257 @@ class GloApiBoardsTests : GloApiTest
             |{"name":"$TEST_BOARD_NAME_2",
             |"id":"$TEST_BOARD_ID_2"}]""".trimMargin()
 
-
     @KtorExperimentalAPI
     @Test
-    fun `given PAT when getBoards with BoardsQuery then return correct GloBoardDTOs`() = runBlocking {
+    fun `given PAT when queryBoards with BoardsQuery then return correct GloBoardDTOs`() =
+        runBlocking {
 
-        // Arrange
-        val client = generateHttpClientWithMockEngine {
-            when (url.parameters.contains(QUERY_KEY_FIELDS, QUERY_VALUE_INVITED_MEMBERS))
-            {
-                true ->
+            // Arrange
+            val client = generateHttpClientWithMockEngine {
+                when (url.parameters.contains(QUERY_KEY_FIELDS, QUERY_VALUE_INVITED_MEMBERS))
                 {
-                    generateMockHttpResponseFor(boardsJson)
+                    true ->
+                    {
+                        generateMockHttpResponseFor(boardsJson)
+                    }
+                    else ->
+                        generate404MockHttpResponse()
                 }
-                else ->
-                    generate404MockHttpResponse()
             }
-        }
 
-        val gloApi = GloApi(
-            personalAuthenticationToken = TEST_PAT,
-            logLevel = LogLevel.ALL,
-            httpClient = client
-        )
-
-        val expected = listOf(
-            Board(
-                id = TEST_BOARD_ID_1,
-                name = TEST_BOARD_NAME_1
-            ),
-            Board(
-                id = TEST_BOARD_ID_2,
-                name = TEST_BOARD_NAME_2
+            val gloApi = GloApi(
+                personalAuthenticationToken = TEST_PAT,
+                logLevel = LogLevel.ALL,
+                httpClient = client
             )
-        )
-        val input = InvitedMembers
 
-        // Act
-        val actual = gloApi.queryBoards {
-            addParameter(input)
+            val expected = listOf(
+                Board(
+                    id = TEST_BOARD_ID_1,
+                    name = TEST_BOARD_NAME_1
+                ),
+                Board(
+                    id = TEST_BOARD_ID_2,
+                    name = TEST_BOARD_NAME_2
+                )
+            )
+
+            // Act
+            val actual = gloApi.queryBoards {
+                addInvitedMembers()
+            }
+
+            // Assert
+            assertEquals(expected, actual)
         }
-
-        // Assert
-        assertEquals(expected, actual)
-    }
-
 
     @KtorExperimentalAPI
     @Test
-    fun `given PAT when getBoards then return GloBoardDTOs`() = runBlocking {
+    fun `given PAT when getBoard with BoardQuery then return correct GloBoardDTO`() =
+        runBlocking {
 
-        // Arrange
-        val client = generateHttpClientWithMockEngine {
-            when (url.encodedPath)
-            {
-                "/v1/glo/boards" ->
+            // Arrange
+            val client = generateHttpClientWithMockEngine {
+                when (url.parameters.contains(QUERY_KEY_FIELDS, QUERY_VALUE_INVITED_MEMBERS))
                 {
-                    generateMockHttpResponseFor(boardsJson)
+                    true ->
+                    {
+                        generateMockHttpResponseFor(boardJson)
+                    }
+                    else ->
+                        generate404MockHttpResponse()
                 }
-                else ->
-                    generate404MockHttpResponse()
             }
+
+            val gloApi = GloApi(
+                personalAuthenticationToken = TEST_PAT,
+                logLevel = LogLevel.ALL,
+                httpClient = client
+            )
+
+            val expected =
+                Board(
+                    id = TEST_BOARD_ID_1,
+                    name = TEST_BOARD_NAME_1
+                )
+
+
+            // Act
+            val actual = gloApi.queryBoard(TEST_BOARD_ID_1) {
+                addInvitedMembers()
+            }
+
+            // Assert
+            assertEquals(expected, actual)
         }
-
-        val gloApi = GloApi(
-            personalAuthenticationToken = TEST_PAT,
-            logLevel = LogLevel.ALL,
-            httpClient = client
-        )
-        val expected = listOf(
-            Board(id = TEST_BOARD_ID_1, name = TEST_BOARD_NAME_1),
-            Board(id = TEST_BOARD_ID_2, name = TEST_BOARD_NAME_2)
-        )
-
-        // Act
-        val actual = gloApi.getBoards()
-
-        // Assert
-        assertEquals(expected, actual)
-    }
 
     @KtorExperimentalAPI
     @Test
-    fun `given PAT when getBoard then return GloBoardDTO`() = runBlocking {
+    fun `given PAT when queryBoardHttpResponse then return HttpResponse`() =
+        runBlocking {
 
-        // Arrange
-        val expected = Board(id = TEST_BOARD_ID_1, name = TEST_BOARD_NAME_1)
-        val client = generateHttpClientWithMockEngine {
-            when (url.encodedPath)
-            {
-                "/v1/glo/boards/${expected.id}" ->
+            // Arrange
+            val client = generateHttpClientWithMockEngine {
+                when
                 {
-                    generateMockHttpResponseFor(boardJson)
+                    url.parameters.contains("fields", "name") ->
+                    {
+                        generateMockHttpResponseFor(boardJson)
+                    }
+                    else ->
+                        generate404MockHttpResponse()
                 }
-                else ->
-                    generate404MockHttpResponse()
             }
+
+            val gloApi = GloApi(
+                personalAuthenticationToken = TEST_PAT,
+                logLevel = LogLevel.ALL,
+                httpClient = client
+            )
+
+            val expected = HttpStatusCode.OK
+
+            // Act
+            val actual = gloApi.queryBoardHttpResponse(TEST_BOARD_ID_1) {
+                addName()
+            }.status
+
+            // Assert
+            assertEquals(expected, actual)
         }
-
-        val gloApi = GloApi(
-            personalAuthenticationToken = TEST_PAT,
-            logLevel = LogLevel.ALL,
-            httpClient = client
-        )
-
-        // Act
-        val actual = gloApi.getBoard(expected.id)
-
-        // Assert
-        assertEquals(expected, actual)
-    }
 
     @KtorExperimentalAPI
     @Test
-    fun `given PAT when getBoardHttpResponse then return HttpResponse`() = runBlocking {
+    fun `given PAT when getBoards then return GloBoardDTOs`() =
+        runBlocking {
 
-        // Arrange
-        val client = generateHttpClientWithMockEngine {
-            when (url.encodedPath)
-            {
-                "/v1/glo/boards/$TEST_BOARD_ID_1" ->
+            // Arrange
+            val client = generateHttpClientWithMockEngine {
+                when (url.encodedPath)
                 {
-                    generateMockHttpResponseFor(boardJson)
+                    "/v1/glo/boards" ->
+                    {
+                        generateMockHttpResponseFor(boardsJson)
+                    }
+                    else ->
+                        generate404MockHttpResponse()
                 }
-                else ->
-                    generate404MockHttpResponse()
             }
+
+            val gloApi = GloApi(
+                personalAuthenticationToken = TEST_PAT,
+                logLevel = LogLevel.ALL,
+                httpClient = client
+            )
+            val expected = listOf(
+                Board(id = TEST_BOARD_ID_1, name = TEST_BOARD_NAME_1),
+                Board(id = TEST_BOARD_ID_2, name = TEST_BOARD_NAME_2)
+            )
+
+            // Act
+            val actual = gloApi.getBoards()
+
+            // Assert
+            assertEquals(expected, actual)
         }
-
-        val gloApi = GloApi(
-            personalAuthenticationToken = TEST_PAT,
-            logLevel = LogLevel.ALL,
-            httpClient = client
-        )
-
-        val expected = HttpStatusCode.OK
-
-        // Act
-        val actual = gloApi.getBoardHttpResponse(TEST_BOARD_ID_1).status
-
-        // Assert
-        assertEquals(expected, actual)
-    }
 
     @KtorExperimentalAPI
     @Test
-    fun `given PAT when getBoardsHttpResponse then return HttpResponse`() = runBlocking {
+    fun `given PAT when getBoard then return GloBoardDTO`() =
+        runBlocking {
 
-        // Arrange
-        val client = generateHttpClientWithMockEngine {
-            when (url.encodedPath)
-            {
-                "/v1/glo/boards" ->
+            // Arrange
+            val expected = Board(id = TEST_BOARD_ID_1, name = TEST_BOARD_NAME_1)
+            val client = generateHttpClientWithMockEngine {
+                when (url.encodedPath)
                 {
-                    generateMockHttpResponseFor(boardsJson)
+                    "/v1/glo/boards/${expected.id}" ->
+                    {
+                        generateMockHttpResponseFor(boardJson)
+                    }
+                    else ->
+                        generate404MockHttpResponse()
                 }
-                else ->
-                    generate404MockHttpResponse()
             }
+
+            val gloApi = GloApi(
+                personalAuthenticationToken = TEST_PAT,
+                logLevel = LogLevel.ALL,
+                httpClient = client
+            )
+
+            // Act
+            val actual = gloApi.getBoard(expected.id)
+
+            // Assert
+            assertEquals(expected, actual)
         }
 
-        val gloApi = GloApi(
-            personalAuthenticationToken = TEST_PAT,
-            logLevel = LogLevel.ALL,
-            httpClient = client
-        )
+    @KtorExperimentalAPI
+    @Test
+    fun `given PAT when getBoardHttpResponse then return HttpResponse`() =
+        runBlocking {
 
-        val expected = HttpStatusCode.OK
+            // Arrange
+            val client = generateHttpClientWithMockEngine {
+                when (url.encodedPath)
+                {
+                    "/v1/glo/boards/$TEST_BOARD_ID_1" ->
+                    {
+                        generateMockHttpResponseFor(boardJson)
+                    }
+                    else ->
+                        generate404MockHttpResponse()
+                }
+            }
 
-        // Act
-        val actual = gloApi.getBoardsHttpResponse().status
+            val gloApi = GloApi(
+                personalAuthenticationToken = TEST_PAT,
+                logLevel = LogLevel.ALL,
+                httpClient = client
+            )
 
-        // Assert
-        assertEquals(expected, actual)
-    }
+            val expected = HttpStatusCode.OK
+
+            // Act
+            val actual = gloApi.getBoardHttpResponse(TEST_BOARD_ID_1).status
+
+            // Assert
+            assertEquals(expected, actual)
+        }
+
+    @KtorExperimentalAPI
+    @Test
+    fun `given PAT when getBoardsHttpResponse then return HttpResponse`() =
+        runBlocking {
+
+            // Arrange
+            val client = generateHttpClientWithMockEngine {
+                when (url.encodedPath)
+                {
+                    "/v1/glo/boards" ->
+                    {
+                        generateMockHttpResponseFor(boardsJson)
+                    }
+                    else ->
+                        generate404MockHttpResponse()
+                }
+            }
+
+            val gloApi = GloApi(
+                personalAuthenticationToken = TEST_PAT,
+                logLevel = LogLevel.ALL,
+                httpClient = client
+            )
+
+            val expected = HttpStatusCode.OK
+
+            // Act
+            val actual = gloApi.getBoardsHttpResponse().status
+
+            // Assert
+            assertEquals(expected, actual)
+        }
 
 }
 

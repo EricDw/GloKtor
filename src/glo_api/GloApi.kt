@@ -3,9 +3,9 @@ package net.publicmethod.glo_api
 import domain.data.Board
 import domain.data.Boards
 import domain.data.GloUser
+import domain.queries.BoardQueryBuilder
 import domain.queries.BoardsQueryBuilder
-import domain.queries.Query
-import domain.queries.QueryParameters
+import domain.queries.QueryParameters2
 import domain.queries.UserQueryBuilder
 import glo_api.anti_corruption.transform
 import io.ktor.client.HttpClient
@@ -44,7 +44,17 @@ class GloApi @KtorExperimentalAPI constructor(
         httpClient.get {
             buildURLFor(
                 endpoint = USER_ENDPOINT,
-                parameters = UserQueryBuilder().apply(init).build().queryParameters
+                parameters = UserQueryBuilder().apply(init).build()
+            )
+        }
+
+    suspend fun queryBoardHttpResponse(boardId: String, init: BoardQueryBuilder.() -> Unit = {}): HttpResponse =
+        httpClient.get {
+            buildURLFor(
+                boardId = boardId,
+                endpoint = BOARD_ENDPOINT,
+                parameters = object : BoardQueryBuilder()
+                {}.apply(init).build()
             )
         }
 
@@ -56,6 +66,20 @@ class GloApi @KtorExperimentalAPI constructor(
 
     suspend fun getBoardsHttpResponse(): HttpResponse =
         httpClient.get { buildURLFor(BOARDS_ENDPOINT) }
+
+    /**
+     * Potentially unsafe operation
+     * and can throw a plethora of exceptions.
+     */
+    @Throws
+    suspend fun queryBoard(
+        boardId: String,
+        init: BoardQueryBuilder.() -> Unit = {}
+    ): Board = getBoardDTO(
+        boardId,
+        object : BoardQueryBuilder()
+        {}.apply(init).build()
+    ).transform()
 
     /**
      * Potentially unsafe operation
@@ -97,22 +121,22 @@ class GloApi @KtorExperimentalAPI constructor(
     suspend fun getBoard(boardId: String): Board =
         getBoardDTO(boardId).transform()
 
-    private suspend fun getUserDTO(query: Query): GloUserDTO =
+    private suspend fun getUserDTO(queryParameters2: QueryParameters2): GloUserDTO =
         httpClient.get {
             buildURLFor(
                 endpoint = USER_ENDPOINT,
-                parameters = query.queryParameters
+                parameters = queryParameters2
             )
         }
 
     private suspend fun getUserDTO(): GloUserDTO =
         httpClient.get { buildURLFor(endpoint = USER_ENDPOINT) }
 
-    private suspend fun getBoardDTOs(query: Query): BoardDTOs =
+    private suspend fun getBoardDTOs(queryParameters: QueryParameters2): BoardDTOs =
         httpClient.get {
             buildURLFor(
                 endpoint = BOARDS_ENDPOINT,
-                parameters = query.queryParameters
+                parameters = queryParameters
             )
         }
 
@@ -122,10 +146,16 @@ class GloApi @KtorExperimentalAPI constructor(
     private suspend fun getBoardDTO(boardId: String): BoardDTO =
         httpClient.get { buildURLFor(BOARD_ENDPOINT, boardId) }
 
+    private suspend fun getBoardDTO(
+        boardId: String,
+        queryParameters: QueryParameters2
+    ): BoardDTO =
+        httpClient.get { buildURLFor(BOARD_ENDPOINT, boardId, queryParameters) }
+
     private fun HttpRequestBuilder.buildURLFor(
         endpoint: String,
         boardId: String? = "",
-        parameters: QueryParameters? = mapOf()
+        parameters: QueryParameters2? = mapOf()
     )
     {
         url {
@@ -149,7 +179,6 @@ class GloApi @KtorExperimentalAPI constructor(
         const val BOARD_ENDPOINT = "boards/"
         const val HEADER_AUTHORIZATION = "Authorization"
     }
-
 }
 
 private fun HttpClientConfig<CIOEngineConfig>.configureCioClient(
