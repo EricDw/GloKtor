@@ -15,15 +15,14 @@ private const val QUERY_VALUE_INVITED_MEMBERS = "invited_members"
 class GloApiColumnsTests : GloApiTest
 {
 
-    private val boardJson =
-        """{"name":"$TEST_BOARD_NAME_1",
-            |"id":"$TEST_BOARD_ID_1"}""".trimMargin()
-
     private val columnsJson =
-        """[{"name":"$TEST_COLUMN_NAME_1",
-            |"id":"$TEST_COLUMN_ID_1",
+        """{"name":"$TEST_BOARD_NAME_1",
+            |"id":"$TEST_BOARD_ID_1",
+            |columns:[{"name":"$TEST_COLUMN_NAME_1",
+            |"id":"$TEST_COLUMN_ID_1"},
             |{"name":"$TEST_COLUMN_NAME_2",
-            |"id":"$TEST_COLUMN_ID_2"}]""".trimMargin()
+            |"id":"$TEST_COLUMN_ID_2"}]}""".trimMargin()
+
 
     @KtorExperimentalAPI
     @Test
@@ -34,6 +33,9 @@ class GloApiColumnsTests : GloApiTest
             val expected = listOf(
                 Column(
                     id = TEST_COLUMN_ID_1, name = TEST_COLUMN_NAME_1
+                ),
+                Column(
+                    id = TEST_COLUMN_ID_2, name = TEST_COLUMN_NAME_2
                 )
             )
             val client = generateHttpClientWithMockEngine {
