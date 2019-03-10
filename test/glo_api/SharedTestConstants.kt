@@ -17,3 +17,10 @@ const val TEST_BOARD_ID_1 = "some-gi-ber-ish1"
 
 const val TEST_BOARD_ID_2 = "some-gi-ber-ish2"
 
+const val TEST_COLUMN_ID_1 = "some-gi-ber-ish1"
+
+const val TEST_COLUMN_ID_2 = "some-gi-ber-ish2"
+
+const val TEST_COLUMN_NAME_1 = "Test Board1"
+
+const val TEST_COLUMN_NAME_2 = "Test Board2"
