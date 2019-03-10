@@ -21,7 +21,7 @@ class GloApiCardsTests : GloApiTest
 
     private val cardJson =
         """{"id": "$TEST_CARD_ID_1",
-            |"name": "$TEST_CARD_NAME_1"
+            |"name": "$TEST_CARD_NAME_1",
             |"attachment_count": "5"}""".trimMargin()
 
 
@@ -72,8 +72,8 @@ class GloApiCardsTests : GloApiTest
             // Arrange
             val expected =
                 Card(
-                    id = TEST_CARD_ID_2,
-                    name = TEST_CARD_NAME_2,
+                    id = TEST_CARD_ID_1,
+                    name = TEST_CARD_NAME_1,
                     attachmentCount = 5
                 )
 
@@ -82,7 +82,7 @@ class GloApiCardsTests : GloApiTest
                 {
                     "/v1/glo/boards/$TEST_BOARD_ID_1/cards/$TEST_CARD_ID_1" ->
                     {
-                        generateMockHttpResponseFor(cardsJson)
+                        generateMockHttpResponseFor(cardJson)
                     }
                     else ->
                         generate404MockHttpResponse()
