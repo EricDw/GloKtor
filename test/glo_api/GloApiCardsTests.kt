@@ -103,45 +103,45 @@ class GloApiCardsTests : GloApiTest
         }
 
 
-//    @KtorExperimentalAPI
-//    @Test
-//    fun `given PAT when getCard with CardQuery then return correct Card`() =
-//        runBlocking {
-//
-//            // Arrange
-//            val client = generateHttpClientWithMockEngine {
-//                when (url.parameters.contains(QUERY_KEY_FIELDS, QUERY_VALUE_ATTACHMENT_COUNT))
-//                {
-//                    true ->
-//                    {
-//                        generateMockHttpResponseFor(cardJson)
-//                    }
-//                    else ->
-//                        generate404MockHttpResponse()
-//                }
-//            }
-//
-//            val gloApi = GloApi(
-//                personalAuthenticationToken = TEST_PAT,
-//                logLevel = LogLevel.ALL,
-//                httpClient = client
-//            )
-//
-//            val expected =
-//                Board(
-//                    id = TEST_BOARD_ID_1,
-//                    name = TEST_BOARD_NAME_1
-//                )
-//
-//
-//            // Act
-//            val actual = gloApi.queryBoard(TEST_BOARD_ID_1) {
-//                addInvitedMembers()
-//            }
-//
-//            // Assert
-//            assertEquals(expected, actual)
-//        }
+    @KtorExperimentalAPI
+    @Test
+    fun `given PAT when getCard with CardQuery then return correct Card`() =
+        runBlocking {
+
+            // Arrange
+            val client = generateHttpClientWithMockEngine {
+                when (url.parameters.contains(QUERY_KEY_FIELDS, QUERY_VALUE_ATTACHMENT_COUNT))
+                {
+                    true ->
+                    {
+                        generateMockHttpResponseFor(cardJson)
+                    }
+                    else ->
+                        generate404MockHttpResponse()
+                }
+            }
+
+            val gloApi = GloApi(
+                personalAuthenticationToken = TEST_PAT,
+                logLevel = LogLevel.ALL,
+                httpClient = client
+            )
+
+            val expected =
+                Card(
+                    id = TEST_CARD_ID_1,
+                    name = TEST_CARD_NAME_1
+                )
+
+
+            // Act
+            val actual = gloApi.queryCard(TEST_BOARD_ID_1, TEST_CARD_ID_1) {
+                addAttachmentCount()
+            }
+
+            // Assert
+            assertEquals(expected, actual)
+        }
 
 
 }
