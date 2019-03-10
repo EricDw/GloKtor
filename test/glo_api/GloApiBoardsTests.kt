@@ -29,7 +29,7 @@ class GloApiBoardsTests : GloApiTest
 
     @KtorExperimentalAPI
     @Test
-    fun `given PAT when queryBoards with BoardsQuery then return correct GloBoardDTOs`() =
+    fun `given PAT when queryBoards with BoardsQuery then return correct Boards`() =
         runBlocking {
 
             // Arrange
@@ -73,7 +73,7 @@ class GloApiBoardsTests : GloApiTest
 
     @KtorExperimentalAPI
     @Test
-    fun `given PAT when getBoard with BoardQuery then return correct GloBoardDTO`() =
+    fun `given PAT when getBoard with BoardQuery then return correct Board`() =
         runBlocking {
 
             // Arrange
@@ -148,7 +148,7 @@ class GloApiBoardsTests : GloApiTest
 
     @KtorExperimentalAPI
     @Test
-    fun `given PAT when getBoards then return GloBoardDTOs`() =
+    fun `given PAT when getBoards then return Boards`() =
         runBlocking {
 
             // Arrange
@@ -183,7 +183,7 @@ class GloApiBoardsTests : GloApiTest
 
     @KtorExperimentalAPI
     @Test
-    fun `given PAT when getBoard then return GloBoardDTO`() =
+    fun `given PAT when getBoard then return Board`() =
         runBlocking {
 
             // Arrange
