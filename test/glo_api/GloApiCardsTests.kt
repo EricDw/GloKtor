@@ -1,5 +1,6 @@
 package glo_api
 
+import domain.data.Board
 import domain.data.Card
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.util.KtorExperimentalAPI
@@ -19,6 +20,11 @@ class GloApiCardsTests : GloApiTest
             |{"id": "$TEST_CARD_ID_2",
             |"name": "$TEST_CARD_NAME_2"}]""".trimMargin()
 
+    private val cardJson =
+        """{"id": "$TEST_CARD_ID_1",
+            |"name": "$TEST_CARD_NAME_1"
+            |"attachment_count": "5"}""".trimMargin()
+
 
     @KtorExperimentalAPI
     @Test
@@ -26,18 +32,17 @@ class GloApiCardsTests : GloApiTest
         runBlocking {
 
             // Arrange
-            val expected = listOf(
+            val expected =
                 Card(
-                    id = TEST_CARD_ID_1, name = TEST_CARD_NAME_1
-                ),
-                Card(
-                    id = TEST_CARD_ID_2, name = TEST_CARD_NAME_2
+                    id = TEST_CARD_ID_2,
+                    name = TEST_CARD_NAME_2,
+                    attachmentCount = 5
                 )
-            )
+
             val client = generateHttpClientWithMockEngine {
                 when (url.encodedPath)
                 {
-                    "/v1/glo/boards/$TEST_BOARD_ID_1/cards" ->
+                    "/v1/glo/boards/$TEST_BOARD_ID_1/cards/$TEST_CARD_ID_1" ->
                     {
                         generateMockHttpResponseFor(cardsJson)
                     }
@@ -53,7 +58,47 @@ class GloApiCardsTests : GloApiTest
             )
 
             // Act
-            val actual = gloApi.getCards(TEST_BOARD_ID_1)
+            val actual = gloApi.getCard(TEST_BOARD_ID_1, TEST_CARD_ID_1)
+
+            // Assert
+            assertEquals(expected, actual)
+        }
+
+    @KtorExperimentalAPI
+    @Test
+    fun `given PAT when getCard with CardQuery then return correct Card`() =
+        runBlocking {
+
+            // Arrange
+            val client = generateHttpClientWithMockEngine {
+                when (url.parameters.contains(QUERY_KEY_FIELDS, QUERY_VALUE_ATTACHMENT_COUNT))
+                {
+                    true ->
+                    {
+                        generateMockHttpResponseFor(cardJson)
+                    }
+                    else ->
+                        generate404MockHttpResponse()
+                }
+            }
+
+            val gloApi = GloApi(
+                personalAuthenticationToken = TEST_PAT,
+                logLevel = LogLevel.ALL,
+                httpClient = client
+            )
+
+            val expected =
+                Board(
+                    id = TEST_BOARD_ID_1,
+                    name = TEST_BOARD_NAME_1
+                )
+
+
+            // Act
+            val actual = gloApi.queryBoard(TEST_BOARD_ID_1) {
+                addInvitedMembers()
+            }
 
             // Assert
             assertEquals(expected, actual)
