@@ -24,3 +24,11 @@ const val TEST_COLUMN_ID_2 = "some-gi-ber-ish2"
 const val TEST_COLUMN_NAME_1 = "Test Board1"
 
 const val TEST_COLUMN_NAME_2 = "Test Board2"
+
+const val TEST_CARD_ID_1 = "some-gi-ber-ish1"
+
+const val TEST_CARD_ID_2 = "some-gi-ber-ish2"
+
+const val TEST_CARD_NAME_1 = "Test Board1"
+
+const val TEST_CARD_NAME_2 = "Test Board2"
