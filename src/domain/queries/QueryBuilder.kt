@@ -12,8 +12,8 @@ abstract class QueryBuilder
             _parameters[key] = mutableSetOf(value)
     }
 
-    fun build(): QueryParameters2 = _parameters
+    fun build(): QueryParameters = _parameters
 
 }
 
-typealias QueryParameters2 = Map<String, Set<String>>
+typealias QueryParameters = Map<String, Set<String>>
