@@ -23,7 +23,7 @@ class GloApiColumnsTests : GloApiTest
 
     @KtorExperimentalAPI
     @Test
-    fun `given PAT when getColumns then return ColumnsDTO`() =
+    fun `given PAT when getColumns then return Columns`() =
         runBlocking {
 
             // Arrange

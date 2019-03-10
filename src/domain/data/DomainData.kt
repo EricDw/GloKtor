@@ -1,7 +1,6 @@
 package domain.data
 
 import com.google.gson.annotations.SerializedName
-import net.publicmethod.dtos.CardDTO
 
 sealed class DomainData
 
@@ -138,13 +137,14 @@ data class GloUser(
     val createdDate: String = ""
 ) : DomainData()
 
-internal typealias CardDTOs = List<CardDTO>
+
+typealias Cards = List<Card>
 
 /**
  * Fields have been annotated with [SerializedName]
  * for serializing with Gson.
  */
-internal data class Card(
+data class Card(
     val id: String = "",
     val name: String = "",
     val description: Description = Description(),
@@ -174,13 +174,13 @@ internal data class Card(
     val updatedDate: String = ""
 ) : DomainData()
 
-internal typealias Assignees = List<Assignee>
+typealias Assignees = List<Assignee>
 
 /**
  * Fields have been annotated with [SerializedName]
  * for serializing with Gson.
  */
-internal data class Assignee(
+data class Assignee(
     val id: String = ""
 ) : DomainData()
 
@@ -188,7 +188,7 @@ internal data class Assignee(
  * Fields have been annotated with [SerializedName]
  * for serializing with Gson.
  */
-internal data class Description(
+data class Description(
     val text: String = "",
     @SerializedName("created_by")
     val createdBy: CreatedBy = CreatedBy(),
@@ -204,7 +204,7 @@ internal data class Description(
  * Fields have been annotated with [SerializedName]
  * for serializing with Gson.
  */
-internal data class UpdatedBy(
+data class UpdatedBy(
     val id: String = ""
 ) : DomainData()
 
@@ -212,7 +212,7 @@ internal data class UpdatedBy(
  * Fields have been annotated with [SerializedName]
  * for serializing with Gson.
  */
-internal data class Comment(
+data class Comment(
     val id: String = "",
     val text: String = "",
     @SerializedName("board_id")

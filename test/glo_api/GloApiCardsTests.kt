@@ -16,13 +16,13 @@ class GloApiCardsTests : GloApiTest
         """[
             |{"id": "$TEST_CARD_ID_1",
             |"name": "$TEST_CARD_NAME_1"},
-            |{"id": "$TEST_CARD_ID_1",
-            |"name": "$TEST_CARD_NAME_1"}]""".trimMargin()
+            |{"id": "$TEST_CARD_ID_2",
+            |"name": "$TEST_CARD_NAME_2"}]""".trimMargin()
 
 
     @KtorExperimentalAPI
     @Test
-    fun `given PAT when getColumns then return ColumnsDTO`() =
+    fun `given PAT when getCards then return Columns`() =
         runBlocking {
 
             // Arrange
