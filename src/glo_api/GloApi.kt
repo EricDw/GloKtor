@@ -25,10 +25,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.URLProtocol
 import io.ktor.http.headersOf
 import io.ktor.util.KtorExperimentalAPI
-import net.publicmethod.dtos.BoardDTO
-import net.publicmethod.dtos.BoardDTOs
-import net.publicmethod.dtos.CardDTOs
-import net.publicmethod.dtos.GloUserDTO
+import net.publicmethod.dtos.*
 
 class GloApi @KtorExperimentalAPI constructor(
     private val personalAuthenticationToken: String,
@@ -134,6 +131,14 @@ class GloApi @KtorExperimentalAPI constructor(
     suspend fun getCards(boardId: String): Cards =
         getCardDTOs(boardId).map { it.transform<Card>() }
 
+    /**
+     * Potentially unsafe operation
+     * and can throw a plethora of exceptions.
+     */
+    @Throws
+    suspend fun getCard(boardId: String, cardId: String): Card =
+        getCardDTO(boardId, cardId).transform()
+
     private suspend fun getUserDTO(queryParameters: QueryParameters): GloUserDTO =
         httpClient.get {
             buildURLFor(
@@ -155,6 +160,9 @@ class GloApi @KtorExperimentalAPI constructor(
 
     private suspend fun getCardDTOs(boardId: String): CardDTOs =
         httpClient.get { buildURLFor({ "$BOARD_ENDPOINT$boardId$CARDS_ENDPOINT" }) }
+
+    private suspend fun getCardDTO(boardId: String, cardId: String): CardDTO =
+        httpClient.get { buildURLFor({ "$BOARD_ENDPOINT$boardId$CARD_ENDPOINT$cardId" }) }
 
     private suspend fun getBoardDTOs(): BoardDTOs =
         httpClient.get { buildURLFor({ BOARDS_ENDPOINT }) }
@@ -193,6 +201,7 @@ class GloApi @KtorExperimentalAPI constructor(
         const val BOARDS_ENDPOINT = "boards"
         const val COLUMNS_ENDPOINT = "/columns"
         const val CARDS_ENDPOINT = "/cards"
+        const val CARD_ENDPOINT = "/cards/"
         const val BOARD_ENDPOINT = "boards/"
         const val HEADER_AUTHORIZATION = "Authorization"
     }
