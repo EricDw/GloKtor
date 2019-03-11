@@ -5,12 +5,10 @@ import io.ktor.client.features.logging.LogLevel
 import io.ktor.http.HttpStatusCode
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.runBlocking
+import net.publicmethod.domain.queries.QUERY_VALUE_INVITED_MEMBERS
 import net.publicmethod.glo_api.GloApi
 import kotlin.test.Test
 import kotlin.test.assertEquals
-
-
-private const val QUERY_VALUE_INVITED_MEMBERS = "invited_members"
 
 
 class GloApiBoardsTests : GloApiTest

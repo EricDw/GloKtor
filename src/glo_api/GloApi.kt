@@ -1,10 +1,7 @@
 package net.publicmethod.glo_api
 
 import domain.data.*
-import domain.queries.BoardQueryBuilder
-import domain.queries.BoardsQueryBuilder
-import domain.queries.QueryParameters
-import domain.queries.UserQueryBuilder
+import domain.queries.*
 import glo_api.anti_corruption.transform
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
@@ -51,6 +48,22 @@ class GloApi @KtorExperimentalAPI constructor(
                 {}.apply(init).build()
             )
         }
+
+    /**
+     * Potentially unsafe operation
+     * and can throw a plethora of exceptions.
+     */
+    @Throws
+    suspend fun queryCard(
+        boardId: String,
+        cardId: String,
+        init: CardQueryBuilder.() -> Unit = {}
+    ): Card = getCardDTO(
+        boardId,
+        cardId,
+        object : CardQueryBuilder()
+        {}.apply(init).build()
+    ).transform()
 
     /**
      * Potentially unsafe operation
@@ -161,8 +174,12 @@ class GloApi @KtorExperimentalAPI constructor(
     private suspend fun getCardDTOs(boardId: String): CardDTOs =
         httpClient.get { buildURLFor({ "$BOARD_ENDPOINT$boardId$CARDS_ENDPOINT" }) }
 
-    private suspend fun getCardDTO(boardId: String, cardId: String): CardDTO =
-        httpClient.get { buildURLFor({ "$BOARD_ENDPOINT$boardId$CARD_ENDPOINT$cardId" }) }
+    private suspend fun getCardDTO(
+        boardId: String,
+        cardId: String,
+        queryParameters: QueryParameters = EMPTY_PARAMETERS
+    ): CardDTO =
+        httpClient.get { buildURLFor({ "$BOARD_ENDPOINT$boardId$CARD_ENDPOINT$cardId" }, queryParameters) }
 
     private suspend fun getBoardDTOs(): BoardDTOs =
         httpClient.get { buildURLFor({ BOARDS_ENDPOINT }) }
@@ -206,6 +223,8 @@ class GloApi @KtorExperimentalAPI constructor(
         const val HEADER_AUTHORIZATION = "Authorization"
     }
 }
+
+private val EMPTY_PARAMETERS: QueryParameters = mapOf()
 
 private fun HttpClientConfig<CIOEngineConfig>.configureCioClient(
     logLevel: LogLevel,

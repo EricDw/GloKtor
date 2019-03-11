@@ -130,7 +130,8 @@ class GloApiCardsTests : GloApiTest
             val expected =
                 Card(
                     id = TEST_CARD_ID_1,
-                    name = TEST_CARD_NAME_1
+                    name = TEST_CARD_NAME_1,
+                    attachmentCount = 5
                 )
 
 
@@ -142,7 +143,6 @@ class GloApiCardsTests : GloApiTest
             // Assert
             assertEquals(expected, actual)
         }
-
 
 }
 
