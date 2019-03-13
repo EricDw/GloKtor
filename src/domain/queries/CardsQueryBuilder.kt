@@ -5,7 +5,7 @@ import net.publicmethod.domain.queries.QUERY_KEY_PAGE
 import net.publicmethod.domain.queries.QUERY_KEY_PER_PAGE
 import net.publicmethod.domain.queries.QUERY_KEY_SORT
 
-class BoardsQueryBuilder : BoardQueryBuilder()
+class CardsQueryBuilder : CardQueryBuilder()
 {
 
     fun addArchived() = addParameter(

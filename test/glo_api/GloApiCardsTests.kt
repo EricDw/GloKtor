@@ -1,6 +1,7 @@
 package glo_api
 
 import domain.data.Card
+import domain.data.Cards
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.runBlocking
@@ -19,10 +20,10 @@ class GloApiCardsTests : GloApiTest
         """[
             |{"id": "$TEST_CARD_ID_1",
             |"name": "$TEST_CARD_NAME_1",
-            |"attachment_count: "5"},
+            |"attachment_count": "5"},
             |{"id": "$TEST_CARD_ID_2",
             |"name": "$TEST_CARD_NAME_2",
-            |"attachment_count: "2"}]""".trimMargin()
+            |"attachment_count": "2"}]""".trimMargin()
 
     private val cardJson =
         """{"id": "$TEST_CARD_ID_1",
@@ -177,8 +178,8 @@ class GloApiCardsTests : GloApiTest
                 httpClient = client
             )
 
-            val expected =
-                arrayOf(
+            val expected: Cards =
+                listOf(
                     Card(
                         id = TEST_CARD_ID_1,
                         name = TEST_CARD_NAME_1,
@@ -190,7 +191,6 @@ class GloApiCardsTests : GloApiTest
                         attachmentCount = 2
                     )
                 )
-
 
             // Act
             val actual = gloApi.queryCards(TEST_BOARD_ID_1) {
