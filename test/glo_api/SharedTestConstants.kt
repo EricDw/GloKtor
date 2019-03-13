@@ -3,10 +3,6 @@ package glo_api
 
 const val TEST_PAT = "test-pat"
 
-const val QUERY_KEY_FIELDS = "fields"
-
-const val QUERY_VALUE_ATTACHMENT_COUNT = "attachment_count"
-
 const val TEST_NAME = "test name"
 
 const val TEST_BOARD_NAME_1 = "Test Board1"

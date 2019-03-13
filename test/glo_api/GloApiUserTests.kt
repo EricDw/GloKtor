@@ -5,6 +5,7 @@ import io.ktor.client.features.logging.LogLevel
 import io.ktor.http.HttpStatusCode
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.runBlocking
+import net.publicmethod.domain.queries.QUERY_KEY_FIELDS
 import net.publicmethod.glo_api.GloApi
 import kotlin.test.Test
 import kotlin.test.assertEquals
