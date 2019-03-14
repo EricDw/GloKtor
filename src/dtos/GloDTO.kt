@@ -130,3 +130,12 @@ internal data class CommentDTO(
     val updated_date: String?
 ) : GloDTO()
 
+internal typealias AttachmentDTOs = List<AttachmentDTO>
+
+internal data class AttachmentDTO(
+    val created_by: CreatedByDTO?,
+    val created_date: String?,
+    val filename: String?,
+    val id: String?,
+    val mime_type: String?
+)
