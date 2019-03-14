@@ -154,6 +154,14 @@ class GloApi @KtorExperimentalAPI constructor(
      * and can throw a plethora of exceptions.
      */
     @Throws
+    suspend fun getCardsForColumn(boardId: String, columnId: String): Cards =
+        getCardDTOsForColumn(boardId, columnId).map { it.transform<Card>() }
+
+    /**
+     * Potentially unsafe operation
+     * and can throw a plethora of exceptions.
+     */
+    @Throws
     suspend fun getCards(boardId: String): Cards =
         getCardDTOs(boardId).map { it.transform<Card>() }
 
@@ -189,6 +197,12 @@ class GloApi @KtorExperimentalAPI constructor(
         queryParameters: QueryParameters = mapOf()
     ): CardDTOs =
         httpClient.get { buildURLFor({ "$BOARD_ENDPOINT$boardId$CARDS_ENDPOINT" }, queryParameters) }
+
+    private suspend fun getCardDTOsForColumn(boardId: String, columnId: String): CardDTOs =
+        httpClient.get {
+            buildURLFor(
+                { "$BOARD_ENDPOINT$boardId$CARDS_FOR_COLUMN_ENDPOINT$columnId$CARDS_ENDPOINT" })
+        }
 
     private suspend fun getCardDTOs(boardId: String): CardDTOs =
         httpClient.get { buildURLFor({ "$BOARD_ENDPOINT$boardId$CARDS_ENDPOINT" }) }
@@ -235,7 +249,6 @@ class GloApi @KtorExperimentalAPI constructor(
         const val ENCODED_PATH = "/v1/glo/"
         const val USER_ENDPOINT = "user"
         const val BOARDS_ENDPOINT = "boards"
-        const val COLUMNS_ENDPOINT = "/columns"
         const val CARDS_FOR_COLUMN_ENDPOINT = "/columns/"
         const val CARDS_ENDPOINT = "/cards"
         const val CARD_ENDPOINT = "/cards/"
