@@ -309,4 +309,32 @@ class DtoTransformerTests
         assertEquals(expected, actual)
     }
 
+    @Test
+    fun `given AttachmentDTO when transform then return Attachment`()
+    {
+        // Arrange
+        val expected = Attachment(
+            id = "some-id",
+            filename = "TestFileName",
+            mimeType = "text/plain",
+            createdBy = CreatedBy("some-id"),
+            createdDate = "Yesterday"
+
+        )
+
+        val input = AttachmentDTO(
+            id = "some-id",
+            filename = "TestFileName",
+            mime_type = "text/plain",
+            created_by = CreatedByDTO("some-id"),
+            created_date = "Yesterday"
+        )
+
+        // Act
+        val actual = input.transform<Attachment>()
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
 }
