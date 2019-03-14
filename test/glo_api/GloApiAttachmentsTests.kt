@@ -1,13 +1,10 @@
 package glo_api
 
-import domain.data.Card
-import domain.data.Cards
+import domain.data.Attachment
+import domain.data.CreatedBy
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.runBlocking
-import net.publicmethod.domain.queries.QUERY_KEY_FIELDS
-import net.publicmethod.domain.queries.QUERY_KEY_PAGE
-import net.publicmethod.domain.queries.QUERY_VALUE_ATTACHMENT_COUNT
 import net.publicmethod.glo_api.GloApi
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -16,7 +13,7 @@ import kotlin.test.assertEquals
 class GloApiAttachmentsTests : GloApiTest
 {
 
-    private val cardsJson =
+    private val attachmentsJson =
         """[{
               |"id": "string",
               |"filename": "string",
@@ -27,36 +24,34 @@ class GloApiAttachmentsTests : GloApiTest
              }
             }]""".trimMargin()
 
-    private val cardJson =
-        """{"id": "$TEST_CARD_ID_1",
-            |"name": "$TEST_CARD_NAME_1",
-            |"attachment_count": "5"}""".trimMargin()
-
-
     @KtorExperimentalAPI
     @Test
-    fun `given PAT when getCards then return correct Cards`() =
+    fun `given PAT when getAttachments then return correct Attachments`() =
         runBlocking {
 
             // Arrange
             val expected = listOf(
-                Card(
-                    id = TEST_CARD_ID_1,
-                    name = TEST_CARD_NAME_1,
-                    attachmentCount = 5
-                ),
-                Card(
-                    id = TEST_CARD_ID_2,
-                    name = TEST_CARD_NAME_2,
-                    attachmentCount = 2
+                Attachment(
+                    id = TEST_ATTACHMENT_ID_1,
+                    filename = TEST_FILE_NAME_1,
+                    mimeType = "text/plain",
+                    createdBy = CreatedBy(TEST_USER_ID_1),
+                    createdDate = "Yesterday"
+                ), Attachment(
+                    id = TEST_ATTACHMENT_ID_2,
+                    filename = TEST_FILE_NAME_2,
+                    mimeType = "text/plain",
+                    createdBy = CreatedBy(TEST_USER_ID_2),
+                    createdDate = "Yesterday"
                 )
             )
+
             val client = generateHttpClientWithMockEngine {
                 when (url.encodedPath)
                 {
                     "/v1/glo/boards/$TEST_BOARD_ID_1/cards" ->
                     {
-                        generateMockHttpResponseFor(cardsJson)
+                        generateMockHttpResponseFor(attachmentsJson)
                     }
                     else ->
                         generate404MockHttpResponse()
@@ -70,226 +65,7 @@ class GloApiAttachmentsTests : GloApiTest
             )
 
             // Act
-            val actual = gloApi.getCards(TEST_BOARD_ID_1)
-
-            // Assert
-            assertEquals(expected, actual)
-        }
-
-    @KtorExperimentalAPI
-    @Test
-    fun `given PAT when getCard then return correct Card`() =
-        runBlocking {
-
-            // Arrange
-            val expected =
-                Card(
-                    id = TEST_CARD_ID_1,
-                    name = TEST_CARD_NAME_1,
-                    attachmentCount = 5
-                )
-
-            val client = generateHttpClientWithMockEngine {
-                when (url.encodedPath)
-                {
-                    "/v1/glo/boards/$TEST_BOARD_ID_1/cards/$TEST_CARD_ID_1" ->
-                    {
-                        generateMockHttpResponseFor(cardJson)
-                    }
-                    else ->
-                        generate404MockHttpResponse()
-                }
-            }
-
-            val gloApi = GloApi(
-                personalAuthenticationToken = TEST_PAT,
-                logLevel = LogLevel.ALL,
-                httpClient = client
-            )
-
-            // Act
-            val actual = gloApi.getCard(TEST_BOARD_ID_1, TEST_CARD_ID_1)
-
-            // Assert
-            assertEquals(expected, actual)
-        }
-
-
-    @KtorExperimentalAPI
-    @Test
-    fun `given PAT when getCard with CardQuery then return correct Card`() =
-        runBlocking {
-
-            // Arrange
-            val client = generateHttpClientWithMockEngine {
-                when (url.parameters.contains(QUERY_KEY_FIELDS, QUERY_VALUE_ATTACHMENT_COUNT))
-                {
-                    true ->
-                    {
-                        generateMockHttpResponseFor(cardJson)
-                    }
-                    else ->
-                        generate404MockHttpResponse()
-                }
-            }
-
-            val gloApi = GloApi(
-                personalAuthenticationToken = TEST_PAT,
-                logLevel = LogLevel.ALL,
-                httpClient = client
-            )
-
-            val expected =
-                Card(
-                    id = TEST_CARD_ID_1,
-                    name = TEST_CARD_NAME_1,
-                    attachmentCount = 5
-                )
-
-
-            // Act
-            val actual = gloApi.queryCard(TEST_BOARD_ID_1, TEST_CARD_ID_1) {
-                addAttachmentCount()
-            }
-
-            // Assert
-            assertEquals(expected, actual)
-        }
-
-    @KtorExperimentalAPI
-    @Test
-    fun `given PAT when getCards with CardsQuery then return correct Cards`() =
-        runBlocking {
-
-            // Arrange
-            val client = generateHttpClientWithMockEngine {
-                when (url.parameters.contains(QUERY_KEY_PAGE))
-                {
-                    true ->
-                    {
-                        generateMockHttpResponseFor(cardsJson)
-                    }
-                    else ->
-                        generate404MockHttpResponse()
-                }
-            }
-
-            val gloApi = GloApi(
-                personalAuthenticationToken = TEST_PAT,
-                logLevel = LogLevel.ALL,
-                httpClient = client
-            )
-
-            val expected: Cards =
-                listOf(
-                    Card(
-                        id = TEST_CARD_ID_1,
-                        name = TEST_CARD_NAME_1,
-                        attachmentCount = 5
-                    ),
-                    Card(
-                        id = TEST_CARD_ID_2,
-                        name = TEST_CARD_NAME_2,
-                        attachmentCount = 2
-                    )
-                )
-
-            // Act
-            val actual = gloApi.queryCards(TEST_BOARD_ID_1) {
-                addPage(2)
-            }
-
-            // Assert
-            assertEquals(expected, actual)
-        }
-
-    @KtorExperimentalAPI
-    @Test
-    fun `given PAT when getCardsForColumn then return correct Cards`() =
-        runBlocking {
-
-            // Arrange
-            val client = generateHttpClientWithMockEngine {
-                when (url.encodedPath)
-                {
-                    "/v1/glo/boards/$TEST_BOARD_ID_1/columns/$TEST_COLUMN_ID_1/cards" ->
-                    {
-                        generateMockHttpResponseFor(cardsJson)
-                    }
-                    else ->
-                        generate404MockHttpResponse()
-                }
-            }
-
-            val gloApi = GloApi(
-                personalAuthenticationToken = TEST_PAT,
-                logLevel = LogLevel.ALL,
-                httpClient = client
-            )
-
-            val expected: Cards =
-                listOf(
-                    Card(
-                        id = TEST_CARD_ID_1,
-                        name = TEST_CARD_NAME_1,
-                        attachmentCount = 5
-                    ),
-                    Card(
-                        id = TEST_CARD_ID_2,
-                        name = TEST_CARD_NAME_2,
-                        attachmentCount = 2
-                    )
-                )
-
-            // Act
-            val actual = gloApi.getCardsForColumn(TEST_BOARD_ID_1, TEST_COLUMN_ID_1)
-
-            // Assert
-            assertEquals(expected, actual)
-        }
-
-    @KtorExperimentalAPI
-    @Test
-    fun `given PAT when queryCardsForColumn with CardsQuery then return correct Cards`() =
-        runBlocking {
-
-            // Arrange
-            val client = generateHttpClientWithMockEngine {
-                when (url.encodedPath)
-                {
-                    "/v1/glo/boards/$TEST_BOARD_ID_1/columns/$TEST_COLUMN_ID_1/cards" ->
-                    {
-                        generateMockHttpResponseFor(cardsJson)
-                    }
-                    else ->
-                        generate404MockHttpResponse()
-                }
-            }
-
-            val gloApi = GloApi(
-                personalAuthenticationToken = TEST_PAT,
-                logLevel = LogLevel.ALL,
-                httpClient = client
-            )
-
-            val expected: Cards =
-                listOf(
-                    Card(
-                        id = TEST_CARD_ID_1,
-                        name = TEST_CARD_NAME_1,
-                        attachmentCount = 5
-                    ),
-                    Card(
-                        id = TEST_CARD_ID_2,
-                        name = TEST_CARD_NAME_2,
-                        attachmentCount = 2
-                    )
-                )
-
-            // Act
-            val actual = gloApi.queryCardsForColumn(TEST_BOARD_ID_1, TEST_COLUMN_ID_1) {
-                addPage(1)
-            }
+            val actual = gloApi.getAttachmentsForCard(TEST_BOARD_ID_1, TEST_CARD_ID_1)
 
             // Assert
             assertEquals(expected, actual)

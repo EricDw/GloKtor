@@ -22,14 +22,14 @@ class GloApiUserTests : GloApiTest
 {
 
     private val userJson =
-        """{"id":"$TEST_ID",
+        """{"id":"$TEST_USER_ID_1",
             |"username":"$TEST_USERNAME",
             |"name":"$TEST_NAME",
             |"created_date":"$TEST_CREATED_DATE",
             |"email":"$TEST_EMAIL"}""".trimMargin()
 
     private val partialUserJson =
-        """{"id":"$TEST_ID",
+        """{"id":"$TEST_USER_ID_1",
             |"name":"$TEST_NAME"}""".trimMargin()
 
     @KtorExperimentalAPI
@@ -56,7 +56,7 @@ class GloApiUserTests : GloApiTest
         )
 
         val expected = GloUser(
-            id = TEST_ID,
+            id = TEST_USER_ID_1,
             name = TEST_NAME
         )
 
@@ -93,7 +93,7 @@ class GloApiUserTests : GloApiTest
         )
 
         val expected = GloUser(
-            id = TEST_ID,
+            id = TEST_USER_ID_1,
             name = TEST_NAME
         )
 
@@ -130,7 +130,7 @@ class GloApiUserTests : GloApiTest
         )
 
         val expected = GloUser(
-            id = TEST_ID,
+            id = TEST_USER_ID_1,
             userName = TEST_USERNAME,
             name = TEST_NAME,
             email = TEST_EMAIL,
@@ -173,7 +173,7 @@ class GloApiUserTests : GloApiTest
         )
 
         val expected = GloUser(
-            id = TEST_ID,
+            id = TEST_USER_ID_1,
             userName = TEST_USERNAME,
             name = TEST_NAME,
             email = TEST_EMAIL,
