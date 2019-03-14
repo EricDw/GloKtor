@@ -227,3 +227,20 @@ data class Comment(
     @SerializedName("updated_date")
     val updatedDate: String = ""
 ) : DomainData()
+
+internal typealias Attachments = List<Attachment>
+
+/**
+ * Fields have been annotated with [SerializedName]
+ * for serializing with Gson.
+ */
+internal data class Attachment(
+    val id: String = "",
+    val filename: String = "",
+    @SerializedName("mime_type")
+    val mimeType: String = "",
+    @SerializedName("created_by")
+    val createdBy: CreatedBy = CreatedBy(),
+    @SerializedName("created_date")
+    val createdDate: String = ""
+) : DomainData()

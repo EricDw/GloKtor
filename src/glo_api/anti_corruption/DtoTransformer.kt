@@ -20,6 +20,7 @@ internal inline fun <reified T : DomainData> GloDTO.transform(): T = when (this)
     is DescriptionDTO -> transformToDescription()
     is UpdatedByDTO -> transformToUpdatedBy()
     is CommentDTO -> transformToComment()
+    is AttachmentDTO -> transformToAttachment()
 } as T
 
 private fun BoardDTO.transformToBoard(): Board =
@@ -150,5 +151,14 @@ private fun CommentDTO.transformToComment() =
         createdDate = created_date ?: "",
         updatedBy = updated_by?.transform() ?: UpdatedBy(),
         updatedDate = updated_date ?: ""
+    )
+
+private fun AttachmentDTO.transformToAttachment() =
+    Attachment(
+        id = id ?: "",
+        mimeType = mime_type ?: "",
+        filename = filename ?: "",
+        createdBy = created_by?.transform() ?: CreatedBy(),
+        createdDate = created_date ?: ""
     )
 

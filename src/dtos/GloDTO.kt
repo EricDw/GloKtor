@@ -138,4 +138,4 @@ internal data class AttachmentDTO(
     val filename: String?,
     val id: String?,
     val mime_type: String?
-)
+) : GloDTO()
