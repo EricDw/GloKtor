@@ -201,6 +201,51 @@ class GloApiCardsTests : GloApiTest
             assertEquals(expected, actual)
         }
 
+    @KtorExperimentalAPI
+    @Test
+    fun `given PAT when getCardsForColumn with CardsQuery then return correct Cards`() =
+        runBlocking {
+
+            // Arrange
+            val client = generateHttpClientWithMockEngine {
+                when (url.encodedPath)
+                {
+                    "/v1/glo/boards/$TEST_BOARD_ID_1/columns/$TEST_COLUMN_ID_1/cards" ->
+                    {
+                        generateMockHttpResponseFor(cardsJson)
+                    }
+                    else ->
+                        generate404MockHttpResponse()
+                }
+            }
+
+            val gloApi = GloApi(
+                personalAuthenticationToken = TEST_PAT,
+                logLevel = LogLevel.ALL,
+                httpClient = client
+            )
+
+            val expected: Cards =
+                listOf(
+                    Card(
+                        id = TEST_CARD_ID_1,
+                        name = TEST_CARD_NAME_1,
+                        attachmentCount = 5
+                    ),
+                    Card(
+                        id = TEST_CARD_ID_2,
+                        name = TEST_CARD_NAME_2,
+                        attachmentCount = 2
+                    )
+                )
+
+            // Act
+            val actual = gloApi.getCardsForColumn(TEST_BOARD_ID_1, TEST_COLUMN_ID_1)
+
+            // Assert
+            assertEquals(expected, actual)
+        }
+
 }
 
 

@@ -236,6 +236,7 @@ class GloApi @KtorExperimentalAPI constructor(
         const val USER_ENDPOINT = "user"
         const val BOARDS_ENDPOINT = "boards"
         const val COLUMNS_ENDPOINT = "/columns"
+        const val CARDS_FOR_COLUMN_ENDPOINT = "/columns/"
         const val CARDS_ENDPOINT = "/cards"
         const val CARD_ENDPOINT = "/cards/"
         const val BOARD_ENDPOINT = "boards/"
