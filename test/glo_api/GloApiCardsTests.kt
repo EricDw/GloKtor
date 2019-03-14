@@ -248,7 +248,7 @@ class GloApiCardsTests : GloApiTest
 
     @KtorExperimentalAPI
     @Test
-    fun `given PAT when quryCardsForColumn with CardsQuery then return correct Cards`() =
+    fun `given PAT when queryCardsForColumn with CardsQuery then return correct Cards`() =
         runBlocking {
 
             // Arrange

@@ -83,6 +83,21 @@ class GloApi @KtorExperimentalAPI constructor(
      * and can throw a plethora of exceptions.
      */
     @Throws
+    suspend fun queryCardsForColumn(
+        boardId: String,
+        columnId: String,
+        init: ColumnCardsQueryBuilder.() -> Unit = {}
+    ): Cards = getCardDTOsForColumn(
+        boardId,
+        columnId,
+        ColumnCardsQueryBuilder().apply(init).build()
+    ).map { it.transform<Card>() }
+
+    /**
+     * Potentially unsafe operation
+     * and can throw a plethora of exceptions.
+     */
+    @Throws
     suspend fun queryBoard(
         boardId: String,
         init: BoardQueryBuilder.() -> Unit = {}
@@ -198,10 +213,16 @@ class GloApi @KtorExperimentalAPI constructor(
     ): CardDTOs =
         httpClient.get { buildURLFor({ "$BOARD_ENDPOINT$boardId$CARDS_ENDPOINT" }, queryParameters) }
 
-    private suspend fun getCardDTOsForColumn(boardId: String, columnId: String): CardDTOs =
+    private suspend fun getCardDTOsForColumn(
+        boardId: String,
+        columnId: String,
+        queryParameters: QueryParameters = mapOf()
+    ): CardDTOs =
         httpClient.get {
             buildURLFor(
-                { "$BOARD_ENDPOINT$boardId$CARDS_FOR_COLUMN_ENDPOINT$columnId$CARDS_ENDPOINT" })
+                { "$BOARD_ENDPOINT$boardId$CARDS_FOR_COLUMN_ENDPOINT$columnId$CARDS_ENDPOINT" },
+                queryParameters
+            )
         }
 
     private suspend fun getCardDTOs(boardId: String): CardDTOs =
