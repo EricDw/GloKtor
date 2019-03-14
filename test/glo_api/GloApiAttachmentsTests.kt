@@ -15,12 +15,20 @@ class GloApiAttachmentsTests : GloApiTest
 
     private val attachmentsJson =
         """[{
-              |"id": "string",
-              |"filename": "string",
-              |"mime_type": "string",
-              |"created_date": "2019-03-14T03:05:30.585Z",
+              |"id": "$TEST_ATTACHMENT_ID_1",
+              |"filename": "$TEST_FILE_NAME_1",
+              |"mime_type": "text/plain",
+              |"created_date": "Yesterday",
               |"created_by": {
-              |"id": "string"
+              |"id": "$TEST_USER_ID_1"
+             }
+            },{
+              |"id": "$TEST_ATTACHMENT_ID_2",
+              |"filename": "$TEST_FILE_NAME_2",
+              |"mime_type": "text/plain",
+              |"created_date": "Yesterday",
+              |"created_by": {
+              |"id": "$TEST_USER_ID_2"
              }
             }]""".trimMargin()
 
