@@ -228,13 +228,13 @@ data class Comment(
     val updatedDate: String = ""
 ) : DomainData()
 
-internal typealias Attachments = List<Attachment>
+typealias Attachments = List<Attachment>
 
 /**
  * Fields have been annotated with [SerializedName]
  * for serializing with Gson.
  */
-internal data class Attachment(
+data class Attachment(
     val id: String = "",
     val filename: String = "",
     @SerializedName("mime_type")

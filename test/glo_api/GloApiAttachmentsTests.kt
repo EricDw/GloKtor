@@ -57,7 +57,7 @@ class GloApiAttachmentsTests : GloApiTest
             val client = generateHttpClientWithMockEngine {
                 when (url.encodedPath)
                 {
-                    "/v1/glo/boards/$TEST_BOARD_ID_1/cards" ->
+                    "/v1/glo/boards/$TEST_BOARD_ID_1/cards/$TEST_CARD_ID_1/attachments" ->
                     {
                         generateMockHttpResponseFor(attachmentsJson)
                     }
