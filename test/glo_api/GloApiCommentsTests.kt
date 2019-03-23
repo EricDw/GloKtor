@@ -52,6 +52,7 @@ class GloApiCommentsTests : GloApiTest
                     boardId = TEST_BOARD_ID_1,
                     createdBy = CreatedBy(TEST_USER_ID_1),
                     createdDate = "Yesterday",
+                    updatedDate = "Yesterday",
                     updatedBy = UpdatedBy(TEST_USER_ID_1),
                     text = TEST_TEXT_1
                 ), Comment(
@@ -60,6 +61,7 @@ class GloApiCommentsTests : GloApiTest
                     boardId = TEST_BOARD_ID_1,
                     createdBy = CreatedBy(TEST_USER_ID_2),
                     createdDate = "Yesterday",
+                    updatedDate = "Yesterday",
                     updatedBy = UpdatedBy(TEST_USER_ID_2),
                     text = TEST_TEXT_2
                 )

@@ -119,6 +119,8 @@ internal data class UpdatedByDTO(
     val id: String?
 ) : GloDTO()
 
+internal typealias CommentDTOs = List<CommentDTO>
+
 internal data class CommentDTO(
     val board_id: String?,
     val card_id: String?,

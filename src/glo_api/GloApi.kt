@@ -160,6 +160,16 @@ class GloApi @KtorExperimentalAPI constructor(
      * and can throw a plethora of exceptions.
      */
     @Throws
+    suspend fun getCommentsForCard(boardId: String, cardId: String): Comments =
+        getCommentDTOsForCard(
+            boardId, cardId
+        ).map { it.transform<Comment>() }
+
+    /**
+     * Potentially unsafe operation
+     * and can throw a plethora of exceptions.
+     */
+    @Throws
     suspend fun getUser(): GloUser =
         getUserDTO().transform()
 
@@ -223,6 +233,22 @@ class GloApi @KtorExperimentalAPI constructor(
         httpClient.get {
             buildURLFor(
                 { "$BOARD_ENDPOINT$boardId$CARD_ENDPOINT$cardId$ATTACHMENTS_ENDPOINT" },
+                queryParameters
+            )
+        }
+
+    /**
+     * Potentially unsafe operation
+     * and can throw a plethora of exceptions.
+     */
+    private suspend fun getCommentDTOsForCard(
+        boardId: String,
+        cardId: String,
+        queryParameters: QueryParameters = mapOf()
+    ): CommentDTOs =
+        httpClient.get {
+            buildURLFor(
+                { "$BOARD_ENDPOINT$boardId$CARD_ENDPOINT$cardId$COMMENTS_ENDPOINT" },
                 queryParameters
             )
         }
@@ -311,6 +337,7 @@ class GloApi @KtorExperimentalAPI constructor(
         const val BOARDS_ENDPOINT = "boards"
         const val CARDS_FOR_COLUMN_ENDPOINT = "/columns/"
         const val ATTACHMENTS_ENDPOINT = "/attachments"
+        const val COMMENTS_ENDPOINT = "/comments"
         const val CARDS_ENDPOINT = "/cards"
         const val CARD_ENDPOINT = "/cards/"
         const val BOARD_ENDPOINT = "boards/"

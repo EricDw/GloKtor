@@ -208,6 +208,8 @@ data class UpdatedBy(
     val id: String = ""
 ) : DomainData()
 
+typealias Comments = List<Comment>
+
 /**
  * Fields have been annotated with [SerializedName]
  * for serializing with Gson.
