@@ -132,6 +132,19 @@ class GloApi @KtorExperimentalAPI constructor(
      * Potentially unsafe operation
      * and can throw a plethora of exceptions.
      */
+    suspend fun queryCommentsForCard(
+        boardId: String,
+        cardId: String,
+        init: CommentsQueryBuilder.() -> Unit = {}
+    ): Comments =
+        getCommentDTOsForCard(
+            boardId, cardId, CommentsQueryBuilder().apply(init).build()
+        ).map { it.transform<Comment>() }
+
+    /**
+     * Potentially unsafe operation
+     * and can throw a plethora of exceptions.
+     */
     @Throws
     suspend fun queryUser(init: UserQueryBuilder.() -> Unit = {}): GloUser =
         getUserDTO(UserQueryBuilder().apply(init).build()).transform()

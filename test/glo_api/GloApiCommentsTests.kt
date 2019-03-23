@@ -7,6 +7,7 @@ import io.ktor.client.features.logging.LogLevel
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.runBlocking
 import net.publicmethod.domain.queries.QUERY_KEY_FIELDS
+import net.publicmethod.domain.queries.QUERY_VALUE_TEXT
 import net.publicmethod.glo_api.GloApi
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -141,7 +142,7 @@ class GloApiCommentsTests : GloApiTest
 
             // Act
             val actual = gloApi.queryCommentsForCard(TEST_BOARD_ID_1, TEST_CARD_ID_1) {
-
+                addText()
             }
 
             // Assert

@@ -6,7 +6,6 @@ internal const val QUERY_KEY_PAGE = "page"
 internal const val QUERY_KEY_PER_PAGE = "per_page"
 internal const val QUERY_KEY_SORT = "sort"
 
-
 internal const val QUERY_VALUE_NAME = "name"
 internal const val QUERY_VALUE_USER_NAME = "username"
 internal const val QUERY_VALUE_CREATED_DATE = "created_date"
@@ -18,7 +17,6 @@ internal const val QUERY_VALUE_CREATED_BY = "created_by"
 internal const val QUERY_VALUE_INVITED_MEMBERS = "invited_members"
 internal const val QUERY_VALUE_LABELS = "labels"
 internal const val QUERY_VALUE_MEMBERS = "members"
-
 
 internal const val QUERY_VALUE_ASSIGNEES = "assignees"
 internal const val QUERY_VALUE_ATTACHMENT_COUNT = "attachment_count"
@@ -34,4 +32,8 @@ internal const val QUERY_VALUE_UPDATED_DATE = "updated_date"
 
 internal const val QUERY_VALUE_FILE_NAME = "filename"
 internal const val QUERY_VALUE_MIME_TYPE = "mime_type"
+
+internal const val QUERY_VALUE_UPDATED_BY = "update_by"
+internal const val QUERY_VALUE_TEXT = "text"
+internal const val QUERY_VALUE_CARD_ID = "card_id"
 
