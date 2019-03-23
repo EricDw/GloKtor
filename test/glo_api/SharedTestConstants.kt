@@ -40,3 +40,11 @@ const val TEST_ATTACHMENT_ID_2 = "some-gi-ber-ish2"
 const val TEST_FILE_NAME_1 = "Test Card1"
 
 const val TEST_FILE_NAME_2 = "Test Card2"
+
+const val TEST_COMMENT_ID_1 = "some-gi-ber-ish1"
+
+const val TEST_COMMENT_ID_2 = "some-gi-ber-ish2"
+
+const val TEST_TEXT_1 = "Some random text1"
+
+const val TEST_TEXT_2 = "Some random text2"
