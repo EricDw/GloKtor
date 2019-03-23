@@ -32,3 +32,6 @@ internal const val QUERY_VALUE_DESCRIPTION = "description"
 internal const val QUERY_VALUE_TOTAL_TASK_COUNT = "total_task_count"
 internal const val QUERY_VALUE_UPDATED_DATE = "updated_date"
 
+internal const val QUERY_VALUE_FILE_NAME = "filename"
+internal const val QUERY_VALUE_MIME_TYPE = "mime_type"
+

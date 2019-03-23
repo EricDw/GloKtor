@@ -119,6 +119,19 @@ class GloApi @KtorExperimentalAPI constructor(
      * Potentially unsafe operation
      * and can throw a plethora of exceptions.
      */
+    suspend fun queryAttachmentsForCard(
+        boardId: String,
+        cardId: String,
+        init: AttachmentsQueryBuilder.() -> Unit = {}
+    ): Attachments =
+        getAttachmentDTOsForCard(
+            boardId, cardId, AttachmentsQueryBuilder().apply(init).build()
+        ).map { it.transform<Attachment>() }
+
+    /**
+     * Potentially unsafe operation
+     * and can throw a plethora of exceptions.
+     */
     @Throws
     suspend fun queryUser(init: UserQueryBuilder.() -> Unit = {}): GloUser =
         getUserDTO(UserQueryBuilder().apply(init).build()).transform()
@@ -198,6 +211,10 @@ class GloApi @KtorExperimentalAPI constructor(
     suspend fun getCard(boardId: String, cardId: String): Card =
         getCardDTO(boardId, cardId).transform()
 
+    /**
+     * Potentially unsafe operation
+     * and can throw a plethora of exceptions.
+     */
     private suspend fun getAttachmentDTOsForCard(
         boardId: String,
         cardId: String,

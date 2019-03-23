@@ -12,7 +12,7 @@ abstract class QueryBuilder
             _parameters[key] = mutableSetOf(value)
     }
 
-    fun build(): QueryParameters = _parameters
+    open fun build(): QueryParameters = _parameters
 
 }
 
