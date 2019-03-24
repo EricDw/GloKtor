@@ -28,6 +28,48 @@ class GloApiBoardsTests : GloApiTest
 
     @KtorExperimentalAPI
     @Test
+    fun `given PAT when createBoard with BoardName then return new Board`() =
+        runBlocking {
+
+            // Arrange
+            val client = generateHttpClientWithMockEngine {
+                when (url.encodedPath)
+                {
+                    "/v1/glo/boards" ->
+                    {
+                        generateMockHttpResponseFor(boardJson)
+                    }
+                    else ->
+                        generate404MockHttpResponse()
+                }
+            }
+
+            val gloApi = GloApi(
+                personalAuthenticationToken = TEST_PAT,
+                logLevel = LogLevel.ALL,
+                httpClient = client
+            )
+
+            val expected = listOf(
+                Board(
+                    id = TEST_BOARD_ID_1,
+                    name = TEST_BOARD_NAME_1
+                ),
+                Board(
+                    id = TEST_BOARD_ID_2,
+                    name = TEST_BOARD_NAME_2
+                )
+            )
+
+            // Act
+            val actual = gloApi.createBoard(boardName = TEST_BOARD_NAME_1)
+
+            // Assert
+            assertEquals(expected, actual)
+        }
+
+    @KtorExperimentalAPI
+    @Test
     fun `given PAT when queryBoards with BoardsQuery then return correct Boards`() =
         runBlocking {
 
