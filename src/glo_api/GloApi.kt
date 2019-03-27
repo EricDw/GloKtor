@@ -17,6 +17,7 @@ import io.ktor.client.features.logging.Logging
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.request.host
+import io.ktor.client.request.post
 import io.ktor.client.response.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.URLProtocol
@@ -36,7 +37,7 @@ class GloApi @KtorExperimentalAPI constructor(
         httpClient.get {
             buildURLFor(
                 endpoint = { USER_ENDPOINT },
-                parameters = UserQueryBuilder().apply(init).build()
+                queryParameters = UserQueryBuilder().apply(init).build()
             )
         }
 
@@ -44,7 +45,7 @@ class GloApi @KtorExperimentalAPI constructor(
         httpClient.get {
             buildURLFor(
                 endpoint = { "$BOARD_ENDPOINT$boardId" },
-                parameters = object : BoardQueryBuilder()
+                queryParameters = object : BoardQueryBuilder()
                 {}.apply(init).build()
             )
         }
@@ -207,6 +208,14 @@ class GloApi @KtorExperimentalAPI constructor(
      * and can throw a plethora of exceptions.
      */
     @Throws
+    suspend fun postBoard(boardName: String): Board =
+        postNewBoard(boardName).transform()
+
+    /**
+     * Potentially unsafe operation
+     * and can throw a plethora of exceptions.
+     */
+    @Throws
     suspend fun getColumns(boardId: String): Columns =
         getBoard(boardId).columns
 
@@ -270,7 +279,7 @@ class GloApi @KtorExperimentalAPI constructor(
         httpClient.get {
             buildURLFor(
                 endpoint = { USER_ENDPOINT },
-                parameters = queryParameters
+                queryParameters = queryParameters
             )
         }
 
@@ -281,7 +290,7 @@ class GloApi @KtorExperimentalAPI constructor(
         httpClient.get {
             buildURLFor(
                 endpoint = { BOARDS_ENDPOINT },
-                parameters = queryParameters
+                queryParameters = queryParameters
             )
         }
 
@@ -319,6 +328,11 @@ class GloApi @KtorExperimentalAPI constructor(
     private suspend fun getBoardDTO(boardId: String): BoardDTO =
         httpClient.get { buildURLFor({ "$BOARD_ENDPOINT$boardId" }) }
 
+    private suspend fun postNewBoard(boardName: String): BoardDTO =
+        httpClient.post(body = """{"name":"$boardName"}""") {
+            buildURLFor({ BOARDS_ENDPOINT })
+        }
+
     private suspend fun getBoardDTO(
         boardId: String,
         queryParameters: QueryParameters
@@ -327,14 +341,31 @@ class GloApi @KtorExperimentalAPI constructor(
 
     private fun HttpRequestBuilder.buildURLFor(
         endpoint: () -> String,
-        parameters: QueryParameters? = mapOf()
+        queryParameters: QueryParameters? = mapOf()
     )
     {
         url {
             protocol = URLProtocol.HTTPS
             host = HOST
             encodedPath = "$ENCODED_PATH${endpoint()}"
-            parameters?.forEach { entry ->
+            queryParameters?.forEach { entry ->
+                entry.value.forEach {
+                    this.parameters.append(entry.key, it)
+                }
+            }
+        }
+    }
+
+    private fun HttpRequestBuilder.buildPostURLFor(
+        endpoint: () -> String,
+        queryParameters: QueryParameters? = mapOf()
+    )
+    {
+        url {
+            protocol = URLProtocol.HTTPS
+            host = HOST
+            encodedPath = "$ENCODED_PATH${endpoint()}"
+            queryParameters?.forEach { entry ->
                 entry.value.forEach {
                     this.parameters.append(entry.key, it)
                 }
@@ -367,7 +398,10 @@ private fun HttpClientConfig<CIOEngineConfig>.configureCioClient(
 {
     defaultRequest {
         host = net.publicmethod.glo_api.GloApi.HOST
-        headersOf("Content-Type" to listOf(ContentType.Application.Json.toString()))
+        headersOf(
+            "Content-Type" to listOf(ContentType.Application.Json.toString()),
+            "accept" to listOf(ContentType.Application.Json.toString())
+        )
         headers.append(GloApi.HEADER_AUTHORIZATION, "Bearer $personalAuthenticationToken")
     }
 

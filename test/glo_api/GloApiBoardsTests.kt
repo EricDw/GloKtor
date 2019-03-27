@@ -50,19 +50,13 @@ class GloApiBoardsTests : GloApiTest
                 httpClient = client
             )
 
-            val expected = listOf(
-                Board(
-                    id = TEST_BOARD_ID_1,
-                    name = TEST_BOARD_NAME_1
-                ),
-                Board(
-                    id = TEST_BOARD_ID_2,
-                    name = TEST_BOARD_NAME_2
-                )
+            val expected = Board(
+                id = TEST_BOARD_ID_1,
+                name = TEST_BOARD_NAME_1
             )
 
             // Act
-            val actual = gloApi.createBoard(boardName = TEST_BOARD_NAME_1)
+            val actual = gloApi.postBoard(boardName = TEST_BOARD_NAME_1)
 
             // Assert
             assertEquals(expected, actual)
