@@ -10,7 +10,7 @@ either a [Personal Authentication Token](https://support.gitkraken.com/developer
 returned from an [OAuth 2.0 flow.](https://support.gitkraken.com/developers/oauth/)
 
 ``` Kotlin
-val glo = GloApi(
+val glo: GloApi = GloApi(
     personalAuthenticationToken = "some-token-goes-here"
     )
 ```
@@ -18,7 +18,7 @@ val glo = GloApi(
 Next step is to make a call with the desired parameters:
 
 ``` Kotlin
-val user = glo.queryUser() {
+val user: GloUser = glo.queryUser() {
     addName()
     addUserName()
     addEmail()
