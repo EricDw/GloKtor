@@ -9,7 +9,7 @@ First we initialize the main interface using
 either a [Personal Authentication Token](https://support.gitkraken.com/developers/pats/) or the principle token
 returned from an [OAuth 2.0 flow.](https://support.gitkraken.com/developers/oauth/)
 
-```
+``` Kotlin
 val glo = GloApi(
     personalAuthenticationToken = "some-token-goes-here"
     )
