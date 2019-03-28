@@ -2,6 +2,7 @@
 
 GloKtor | gl·ok·tor | is a Kotlin Glo Boards SDK featuring a DSL for
 building GloAPI GET queries. 
+
 POST queries are coming soon!
 
 ## USAGE
