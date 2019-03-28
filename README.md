@@ -17,7 +17,7 @@ val glo = GloApi(
 
 Next step is to make a call with the desired parameters:
 
-```
+``` Kotlin
 val user = glo.queryUser() {
     addName()
     addUserName()
