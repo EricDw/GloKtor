@@ -27,4 +27,4 @@ val user: GloUser = glo.queryUser() {
 ```
 
 Thanks to the built in anti-corruption layer the returned data classes will
-never have `null` values, just default implementations.
+never contain `null` values, just default implementations.
