@@ -49,16 +49,16 @@ private fun BoardDTO.transformToBoard(): Board =
 
 private fun ArchivedColumnDTO.transformToArchivedColumn(): ArchivedColumn =
     ArchivedColumn(
-        id = id,
-        name = name,
+        id = id ?: "",
+        name = name ?: "",
         archivedDate = archived_date ?: "",
         createdDate = created_date ?: ""
     )
 
 private fun ColumnDTO.transformToColumn(): Column =
     Column(
-        id = id,
-        name = name,
+        id = id ?: "",
+        name = name ?: "",
         archivedDate = archived_date ?: "",
         createdDate = created_date ?: ""
     )
@@ -68,15 +68,15 @@ private fun CreatedByDTO.transformToCreatedBy(): CreatedBy =
 
 private fun InvitedMemberDTO.transformToInvitedMember(): InvitedMember =
     InvitedMember(
-        id = id,
-        userName = username,
+        id = id ?: "",
+        userName = username ?: "",
         role = role ?: ""
     )
 
 private fun LabelDTO.transformToLabel(): Label =
     Label(
-        id = id,
-        name = name,
+        id = id ?: "",
+        name = name ?: "",
         color = color?.transform() ?: Color(),
         createdBy = created_by?.transform() ?: CreatedBy(),
         createdDate = created_date ?: ""
@@ -84,8 +84,8 @@ private fun LabelDTO.transformToLabel(): Label =
 
 private fun MemberDTO.transformToMember(): Member =
     Member(
-        id = id,
-        userName = username,
+        id = id ?: "",
+        userName = username ?: "",
         role = role ?: ""
     )
 

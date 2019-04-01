@@ -20,8 +20,8 @@ internal data class BoardDTO(
 internal typealias ArchivedColumnDTOs = List<ArchivedColumnDTO>
 
 internal data class ArchivedColumnDTO(
-    val id: String,
-    val name: String,
+    val id: String?,
+    val name: String?,
     val archived_date: String?,
     val created_date: String?
 ) : GloDTO()
@@ -29,8 +29,8 @@ internal data class ArchivedColumnDTO(
 internal typealias ColumnDTOs = List<ColumnDTO>
 
 internal data class ColumnDTO(
-    val id: String,
-    val name: String,
+    val id: String?,
+    val name: String?,
     val archived_date: String?,
     val created_date: String?
 ) : GloDTO()
@@ -38,16 +38,16 @@ internal data class ColumnDTO(
 internal typealias InvitedMemberDTOs = List<InvitedMemberDTO>
 
 internal data class InvitedMemberDTO(
-    val id: String,
-    val username: String,
+    val id: String?,
+    val username: String?,
     val role: String?
 ) : GloDTO()
 
 internal typealias LabelDTOs = List<LabelDTO>
 
 internal data class LabelDTO(
-    val id: String,
-    val name: String,
+    val id: String?,
+    val name: String?,
     val color: ColorDTO?,
     val created_by: CreatedByDTO?,
     val created_date: String?
@@ -56,8 +56,8 @@ internal data class LabelDTO(
 internal typealias MemberDTOs = List<MemberDTO>
 
 internal data class MemberDTO(
-    val id: String,
-    val username: String,
+    val id: String?,
+    val username: String?,
     val role: String?
 ) : GloDTO()
 
