@@ -30,3 +30,17 @@ val user: GloUser = glo.queryUser() {
 
 Thanks to the built in anti-corruption layer the returned data classes will
 never contain `null` values, just default implementations.
+
+Anything could go wrong while trying to get the data classes directly.
+That being the case wrapping the call in a `try catch` is advised.
+
+Alternatively an `HttpResponse` object can be returned.
+
+``` Kotlin
+val userRespone: HttpResponse = glo.queryUserResponse() {
+    addName()
+    addUserName()
+    addEmail()
+    addCreatedDate()
+}
+```
